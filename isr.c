@@ -4,17 +4,16 @@
 #include "gamma.h"
 bool panic_on_unhandled;
 void(*handlers[256])(registers_t);
-void register_handler(unsigned int number, void(*fnPtr)(registers_t))
+void register_handler(byte number, void(*fnPtr)(registers_t))
 {
   handlers[number]=fnPtr;
 }
-void unregister_handler(unsigned int number)
+void unregister_handler(byte number)
 {
   handlers[number]=0;
 }
 void init_isr()
 {
-  term_debug("Zeroing handlers[]"); 
   memset(&handlers, 0, sizeof(void*)*256);
 }
 void set_unhandled_panic(bool b)
@@ -29,9 +28,6 @@ void isr_handler(struct registers_t regs) // high-level handler for interrupts
       term_debug("received unhandled interrupt\n");
       term_debug("interrupt number in decimal: ");
       term_putn_dec(regs.interrupt_number);
-      term_putchar('\n');
-      term_debug("error code in decimal: ");
-      term_putn_dec(regs.error_code);
       term_debug("\n");
 #endif
       if(panic_on_unhandled==true)
@@ -52,5 +48,19 @@ void irq_handler(struct registers_t regs)
   if(handlers[regs.interrupt_number]!=0)
     {
       handlers[regs.interrupt_number](regs);
+    }
+  else
+    { 
+#ifndef NDEBUG
+      term_debug("received unhandled interrupt\n");
+      term_debug("interrupt number in decimal: ");
+      term_putn_dec(regs.interrupt_number);
+      term_putchar('\n');
+      term_debug("error code in decimal: ");
+      term_putn_dec(regs.error_code);
+      term_debug("\n");
+#endif
+      if(panic_on_unhandled==true)
+	panic("unhandled interrupt");
     }
 }

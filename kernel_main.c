@@ -12,7 +12,7 @@ void gpf(registers_t regs)
 int kernel_main(struct multiboot *mboot_ptr)
 {
   init_desc_tables();
-  init_clock(10); // do this ASAP, argument is time in milliseconds
+  init_clock(100); // do this ASAP, argument is time in milliseconds
   init_terminal();
   term_puts("terminal initialized.\n");
   term_puts("kernel booting...\n");

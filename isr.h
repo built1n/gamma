@@ -1,5 +1,8 @@
+#ifndef ISR_H
+#define ISR_H
 #include <stdbool.h>
 #include <stdint.h>
+#include "gamma.h"
 struct registers_t {
   uint32_t ds;
   uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
@@ -8,6 +11,7 @@ struct registers_t {
 } __attribute__((packed));
 typedef struct registers_t registers_t;
 void init_isr();
-void register_handler(unsigned int number, void(*fnPtr)(registers_t));
-void unregister_handler(unsigned int number);
+void register_handler(unsigned char number, void(*fnPtr)(registers_t));
+void unregister_handler(unsigned char number);
 void set_unhandled_panic(bool);
+#endif

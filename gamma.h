@@ -9,5 +9,8 @@
 #include "panic.h"
 #include "clock.h"
 #include "keyboard.h"
+#include "page.h"
+#include "heap.h"
+#include "frame.h"
 typedef unsigned char byte;
 #endif

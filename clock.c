@@ -19,5 +19,5 @@ void init_clock(uint32_t frequency)
 }
 uint64_t ms_time(void)
 {
-  return tick * 10; 
+  return tick * 100; 
 }
