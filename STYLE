@@ -1,0 +1,38 @@
+*****************CODING*STYLE************************
+0. All C code will follow the GNU style.
+1. Function opening braces are on the line after the function declaration, and
+are not indented.
+ void f()
+ {
+2. Indents are 2 spaces in size.
+3. For all code blocks except function blocks, indent the braces, AND indent
+again the code;
+ void f()
+ {
+   if(asdf)
+     {
+       code;
+     }
+ }
+4. Single-statement code blocks can OPTIONALLY have braces.
+Both these are acceptable:
+ if(adsf)
+   statement;
+ if(asdf)
+   {
+     statement;
+   }
+5. You MUST document ALL inline assembly!
+6. Function arguments are inline, like in C++.
+
+ void f(int arg1, int arg2)
+ ===NOT===
+ void f(arg1, arg2)int arg1, int arg2
+
+7. Use the smallest integer possible for the job! If you only need to count to
+100, use an 8-bit integer.
+8. Try to avoid using "magic numbers". If you do, document what they do.
+9. Avoid overusing macros.
+10. When it comes to speed vs. size, speed wins, unless the size is
+unreasonable (>16M).
+11. Always initialize pointers.

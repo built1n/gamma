@@ -1,0 +1,7 @@
+What can I do?
+This file answers that.
+1. Write a PS/2 driver [Medium sized check mark here]
+2. Get memory allocation working [Big red X]
+3. Get the clock working. [Big green check mark here]
+4. Get some multitasking working
+5. Write/port a shell.
