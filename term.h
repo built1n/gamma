@@ -1,10 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <stddef.h>
-static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
-size_t term_row, term_column;
-uint8_t term_color;
-uint16_t* term_buffer;
+
 enum vga_color
   {
     COLOR_BLACK=0,
@@ -29,3 +26,4 @@ void term_setcolor(uint8_t color); // set color of text to be printed in the fut
 void term_putchar(char c);
 void term_puts(const char* str);
 void term_putn_dec(int number);
+void term_clean();

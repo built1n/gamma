@@ -3,6 +3,10 @@
 #include "string.h"
 #include <stdint.h>
 #include <stddef.h>
+static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
+size_t term_row, term_column;
+uint8_t term_color;
+uint16_t* term_buffer;
 uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg <<4;
@@ -13,13 +17,8 @@ uint16_t make_vgaentry(char c, uint8_t col)
   uint16_t color16=col;
   return c16 | color16 << 8;
 }
-
-void init_terminal()
+void term_clear()
 {
-  term_row=0;
-  term_column=0;
-  term_color=make_color(COLOR_WHITE, COLOR_BLACK);
-  term_buffer=(uint16_t*)0xB8000;
   for(size_t y=0;y<VGA_HEIGHT;++y)
     {
       for(size_t x=0;x<VGA_WIDTH;++x)
@@ -28,7 +27,14 @@ void init_terminal()
 	  term_buffer[idx]=make_vgaentry(' ', term_color);
 	}
     }
-  term_puts("terminal initialized\n");
+}  
+void init_terminal()
+{
+  term_row=0;
+  term_column=0;
+  term_color=make_color(COLOR_WHITE, COLOR_BLACK);
+  term_buffer=(uint16_t*)0xB8000;
+  term_clear();
 }
 void term_scroll() // scroll the terminal 1 line
 {
@@ -107,13 +113,12 @@ void term_puts(const char* str)
 }
 void term_putn_dec(int number)
 {
-  int firstDigit=10; // size_t for 64-bit numbers
-  while(number%firstDigit==0 && firstDigit>0)
+  int firstDigit=1000000000;
+  while(number/firstDigit==0)firstDigit/=10;
+  while(firstDigit>0)
     {
-      --firstDigit;
-    }
-  for(;firstDigit>0;--firstDigit)
-    {
-      term_putchar((char)dtoc((char)(number%firstDigit)));
+      putchar(dtoc((uint8_t)number/firstDigit));
+      number%=firstDigit;
+      firstDigit/=10;
     }
 }

@@ -7,7 +7,7 @@ size_t strlen(const char* str)
     ++ret;
   return ret;
 }
-char dtoc(char digit) // digit is integer
+char dtoc(uint8_t digit) // this should go into ctype.h, but this is fine
 {
-  return digit-'0';
+  return digit+'0';
 }
