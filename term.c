@@ -34,7 +34,18 @@ void term_move_cursor(uint16_t cursor_idx)
   outb(0x3D5, cursor_idx >> 8); // high byte
   outb(0x3D4, 15);
   outb(0x3D5, cursor_idx); // low byte
-}  
+}
+void update_bios_cursor(void)
+{
+  uint16_t cursor_x=term_column, cursor_y=term_row;
+  if(cursor_x==VGA_WIDTH)
+    {
+      cursor_x=0;
+      ++cursor_y;
+    }
+  uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
+  term_move_cursor(cursor_idx);
+}
 void init_terminal(void)
 {
   term_row=0;
@@ -48,24 +59,24 @@ void term_reset(void)
 {
   init_terminal();
 }
-void term_scroll(void) // scroll the terminal 1 line
+void term_scroll(void) // scroll the terminal 1 line, seems buggy!
 {
   const size_t max=VGA_HEIGHT-1; // this is correct
   for(size_t y=1;y<max;++y)
     {
       for(size_t x=0;x<VGA_WIDTH;++x) // scroll all lines except last one
 	{
-	  const size_t idx1=y*VGA_WIDTH+x, idx2=y+1*VGA_WIDTH+x;
-	  term_buffer[idx2]=term_buffer[idx1];
+	  const size_t idx1=y*VGA_WIDTH+x, idx2=(y+1)*VGA_WIDTH+x;
+	  term_buffer[idx1]=term_buffer[idx2];
 	}
     }
-  const size_t n=max*VGA_WIDTH;
   for(size_t x=0;x<VGA_WIDTH;++x) // fill last line with spaces
     {
-      const size_t idx=n+x;
+      const size_t idx=(VGA_HEIGHT-1)*VGA_WIDTH+x;
       term_buffer[idx]=make_vgaentry(' ', term_color);
     }
-  term_row=max-1;
+  term_row=max;
+  update_bios_cursor();
 }
 void term_setcolor(uint8_t color)
 {
@@ -76,17 +87,7 @@ void term_putentry(char c, uint8_t color, size_t x, size_t y)
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
 }
-void update_bios_cursor(void)
-{
-  uint16_t cursor_x=term_column, cursor_y=term_row;
-  if(cursor_x==VGA_WIDTH)
-    {
-      cursor_x=0;
-      ++cursor_y;
-    }
-  uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
-  term_move_cursor(cursor_idx);
-}
+
 void term_putchar(char c)
 { 
   if(c=='\n')

@@ -1,10 +1,11 @@
 #include <stddef.h>
 #include <stdint.h>
-extern void flush_gdt(uint32_t); // asm function
+#include "gdt.h"
+#include "idt.h"
+extern void gdt_flush(uint32_t); // asm function
 gdt_entry_type gdt_entries[5];
 gdt_ptr gdt_pointer;
-idt_entry_type idt_entries[256];
-static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity)
+static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
 {
   gdt_entries[num].base_low=(base & 0xFFFF);
   gdt_entries[num].base_middle=(base >> 16) & 0xFF;
@@ -17,7 +18,7 @@ static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t acc
 static void init_gdt()
 {
   gdt_pointer.limit=(sizeof(gdt_entry_type)*5)-1;
-  gdt_pointer.base=&get_entries;
+  gdt_pointer.base=(uint32_t)&gdt_entries;
   gdt_set_gate(0,0,0,0,0); // null seg.
   gdt_set_gate(1,0,0xFFFFFFFF, 0x9A, 0xCF);
   gdt_set_gate(2,0,0xFFFFFFFF, 0x92, 0xCF);

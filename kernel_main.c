@@ -8,7 +8,8 @@ extern "C"
 int kernel_main(struct multiboot *mboot_ptr)
 {
   init_terminal();
-  for(;;)
-    term_puts("LLLLLLLLLLLL\nO\nLLLLLLLLLLLLL");
+  term_puts("kernel booting...\n");
+  for(int i=0;i<22;++i)
+    term_puts("Empty line\n");
   return 0xDEADBEEF;
 }

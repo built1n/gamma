@@ -1,16 +1,16 @@
-struct idt_entry_type
+typedef struct idt_entry_type
 {
   uint16_t base_low;
-  uint16_t selector;
+  uint16_t sel;
   uint8_t zero; // take up space
   uint8_t flags;
   uint16_t base_high;
-} __attribute__((packed));
-struct idt_ptr
+} idt_entry_type __attribute__((packed));
+typedef struct idt_ptr
 {
   uint16_t limit;
   uint32_t base;
-} __attribute__((packed));
+} idt_ptr __attribute__((packed));
 // our interrupt handlers!
 extern void isr0();
 extern void isr1();
