@@ -9,9 +9,7 @@ struct {
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
 } modkeystatus;
-extern char* inputbuf;
-extern int inputbuf_idx;
-static void ps2_qwerty_autogen(byte scancode)
+static char ps2_qwerty_autogen(byte scancode)
 {
   char c=0;
   switch(scancode)
@@ -179,8 +177,9 @@ static void ps2_qwerty_autogen(byte scancode)
   if(c!=0)
     {
       term_putchar(c);
-      return;
+      return c;
     }
+  return 0;
 }
 byte ledstatus=0;
 const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'};
@@ -225,7 +224,8 @@ static void ps2_process_key(byte scancode)
       return;
     }
   // not a modifier
-  ps2_qwerty_autogen(scancode);
+  if(ps2_qwerty_autogen(scancode))
+    return;
   switch(scancode)
     {
     case 0x1C:
@@ -242,7 +242,7 @@ static void ps2_process_key(byte scancode)
 	{
 	  // reboot, or print message
 	  term_puts("CTRL-ALT-DELETE recieved!\n");
-	  panic("CTRL-ALT-DELETE recieved");
+	  panic("user-generated interrupt");
  	}
     case 0x1A:
       if(modkeystatus.shiftdown)
@@ -323,14 +323,14 @@ static void ps2_process_key(byte scancode)
 	term_putchar(scancode!=11?dtoc(scancode-1):'0');
       return;
     }
-  term_puts("Unhandled scancode: ");
-  term_putn_hex(scancode);
-  term_putchar('\n');
 }
 void set_leds(int num, int caps, int scroll)
 {
   ledstatus=scroll | (num << 1) | (caps << 2);
   outb(0x60, 0xED);
+  term_puts("set_leds response: ");
+  term_putn_hex(inb(0x60));
+  term_putchar('\n');
   outb(0x60, ledstatus);
 }
 void ps2_interrupt(registers_t regs)
@@ -339,7 +339,7 @@ void ps2_interrupt(registers_t regs)
 }
 void init_ps2()
 {
-  memset(&modkeystatus, 0, sizeof(modkeystatus)); 
+  memset(&modkeystatus, 0, sizeof(modkeystatus));
   register_handler(33, &ps2_interrupt);
   outb(0x60, 0xF0);
   outb(0x60, 1); // scan code set 1
