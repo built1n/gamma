@@ -12,17 +12,18 @@
 	
 .section .initialize_stack
 stack_bottom:			# Grows downwards in memory
-	.skip 16384		# 16K
+	.skip 32768		# 32KB stack
 stack_top:
 	
 .section .text
 	.global _start
 	.type _start, @function
-_start:
+_start:				# This is where execution begins
+	cli			# Stop interrupts, this is a critical section
 	movl %esp, stack_top	# Initialize the stack
-	push %ebp		# Add %ebp to the arguments of kernel_main
-	call kernel_main	# Start the kernel
-	cli			# Clear interrupts
+	push %ebp		# Add register ebp to the arguments
+	call kernel_main	# Start the kernel, SHOULD not return
+	cli			# Stop interrupts
 	hlt			# Halt the CPU
 .LKernel_hang:			# Idle forever
 	jmp .LKernel_hang
