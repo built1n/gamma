@@ -1,10 +1,18 @@
 #include "gamma.h"
-long double sysuptime=0;
-void clock_tick(int err)
+#include <stdint.h>
+uint64_t tick;
+void clock_tick(registers_t regs)
 {
   term_puts("Clock tick...\n");
+  ++tick;
 }
-unsigned long sys_uptime(void)
+void init_clock(uint32_t frequency)
 {
-  return (unsigned long)0;
+  tick=0;
+  register_handler(32, &clock_tick);
+  uint32_t divisor=1193180/frequency;
+  outb(0x43, 0x36);
+  byte low=(byte)(divisor & 0xFF), high=(byte)( (divisor >> 8) & 0xFF);
+  outb(0x40, low);
+  outb(0x40, high);
 }
