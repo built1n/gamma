@@ -25,10 +25,10 @@ void isr_handler(struct registers_t regs) // high-level handler for interrupts
   if(handlers[regs.interrupt_number]==0)
     { 
 #ifndef NDEBUG
-      term_debug("received unhandled interrupt\n");
-      term_debug("interrupt number in decimal: ");
+      term_puts("received unhandled interrupt\n");
+      term_puts("interrupt number in decimal: ");
       term_putn_dec(regs.interrupt_number);
-      term_debug("\n");
+      term_puts("\n");
 #endif
       if(panic_on_unhandled==true)
 	panic("unhandled interrupt");
