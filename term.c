@@ -196,7 +196,7 @@ void put_hex_char(unsigned char n)
 void term_putn_hex(int number)
 {
   term_puts("0x");
-  int mask=0x0xF000000;
+  int mask=0xF000000;
   for(int i=0;i<8;++i)
     {
       put_hex_char(number & mask);
