@@ -6,21 +6,23 @@
 	
 .section .multiboot
 	.align 4
+multiboot_header:	
 	.long MAGIC
 	.long FLAGS
 	.long CHECKSUM		# Prove that we are multiboot
 	
 .section .initialize_stack
-stack_bottom:			# Grows downwards in memory
+stack_bottom:			# Stack grows up in addresses, so bottom is
+				# lower than the top
 	.skip 32768		# 32KB stack
 stack_top:
 	
-.section .text
-	.global _start
+.section .text 			# The executable part
+	.global _start		# Declare _start as a function
 	.type _start, @function
 _start:				# This is where execution begins
 	cli			# Stop interrupts, this is a critical section
-	movl $stack_top, %esp	# Initialize the stack
+	movl $stack_bottom, %esp	# Initialize the stack
 	push %ebp		# Add register ebp to the arguments
 	call kernel_main	# Start the kernel, SHOULD not return
 	cli			# Stop interrupts
