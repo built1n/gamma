@@ -9,7 +9,7 @@ struct {
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
 } modkeystatus;
-static char ps2_qwerty_autogen(byte scancode)
+static char ps2_qwerty_autogen(byte scancode) // process qwerty keymap
 {
   char c=0;
   switch(scancode)
@@ -176,7 +176,7 @@ static char ps2_qwerty_autogen(byte scancode)
     }
   if(c!=0)
     {
-      term_putchar(c);
+      term_put_keyboard_char(c);
       return c;
     }
   return 0;
@@ -229,13 +229,13 @@ static void ps2_process_key(byte scancode)
   switch(scancode)
     {
     case 0x1C:
-      term_putchar('\n');
+      term_put_keyboard_char('\n');
       return;
     case 0x0E:
-      term_putchar('\b');
+      term_put_keyboard_char('\b');
       return;
     case 0x39:
-      term_putchar(' ');
+      term_put_keyboard_char(' ');
       return;
     case 0x53:
       if(modkeystatus.metadown && modkeystatus.ctrldown)
@@ -246,81 +246,82 @@ static void ps2_process_key(byte scancode)
  	}
     case 0x1A:
       if(modkeystatus.shiftdown)
-	term_putchar('{');
+	term_put_keyboard_char('{');
       else
-	term_putchar('[');
+	term_put_keyboard_char('[');
       return;
     case 0x1B:
       if(modkeystatus.shiftdown)
-	term_putchar('}');
+	term_put_keyboard_char('}');
       else
-	term_putchar(']');
+	term_put_keyboard_char(']');
       return;
     case 0x27:
       if(modkeystatus.shiftdown)
-	term_putchar(':');
+	term_put_keyboard_char(':');
       else
-	term_putchar(';');
+	term_put_keyboard_char(';');
       return;
     case 0x28:
       if(modkeystatus.shiftdown)
-	term_putchar('"');
+	term_put_keyboard_char('"');
       else
-	term_putchar('\'');
+	term_put_keyboard_char('\'');
       return;
     case 0x29:
       if(modkeystatus.shiftdown)
-	term_putchar('~');
+	term_put_keyboard_char('~');
       else
-	term_putchar('`');
+	term_put_keyboard_char('`');
       return;
     case 0x2B:
       if(modkeystatus.shiftdown)
-	term_putchar('|');
+	term_put_keyboard_char('|');
       else
-	term_putchar('\\');
+	term_put_keyboard_char('\\');
       return;
     case 0x33:
       if(modkeystatus.shiftdown)
-	term_putchar('<');
+	term_put_keyboard_char('<');
       else
-	term_putchar(',');
+	term_put_keyboard_char(',');
       return;
     case 0x34:
       if(modkeystatus.shiftdown)
-	term_putchar('>');
+	term_put_keyboard_char('>');
       else
-	term_putchar('.');
+	term_put_keyboard_char('.');
       return;
     case 0x35:
       if(modkeystatus.shiftdown)
-	term_putchar('?');
+	term_put_keyboard_char('?');
       else
-	term_putchar('/');
+	term_put_keyboard_char('/');
       return;
     case 0x0C:
       if(modkeystatus.shiftdown)
-	term_putchar('_');
+	term_put_keyboard_char('_');
       else
-	term_putchar('-');
+	term_put_keyboard_char('-');
       return;
     case 0x0D:
       if(modkeystatus.shiftdown)
-	term_putchar('+');
+	term_put_keyboard_char('+');
       else
-	term_putchar('=');
+	term_put_keyboard_char('=');
       return;
     case 0x0F:
       // tab
-      term_puts("        ");
+      for(int i=0;i<8;++i)
+	term_put_keyboard_char(' ');
       return;
     }
   if(scancode >=2 && scancode <=11) // number
     {
       if(modkeystatus.shiftdown)
-	term_putchar(number_shift_lookup[scancode-2]);
+	term_put_keyboard_char(number_shift_lookup[scancode-2]);
       else
-	term_putchar(scancode!=11?dtoc(scancode-1):'0');
+	term_put_keyboard_char(scancode!=11?dtoc(scancode-1):'0');
       return;
     }
 }

@@ -5,6 +5,7 @@ static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
 static size_t term_row, term_column;
 static uint8_t term_color;
 static uint16_t* term_buffer;
+int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over
 static uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg <<4;
@@ -69,7 +70,9 @@ static void term_scroll(void) // scroll the terminal 1 line, seems buggy!
 	  const size_t idx1=y*VGA_WIDTH+x, idx2=(y+1)*VGA_WIDTH+x;
 	  term_buffer[idx1]=term_buffer[idx2];
 	}
+      last_prompt_char[y]=last_prompt_char[y+1];
     }
+  last_prompt_char[VGA_HEIGHT-1]=0;
   for(size_t x=0;x<VGA_WIDTH;++x) // fill last line with spaces
     {
       const size_t idx=(VGA_HEIGHT-1)*VGA_WIDTH+x;
@@ -91,8 +94,7 @@ static void term_putentry(char c, uint8_t color, size_t x, size_t y)
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
 }
-
-void term_putchar(char c)
+static void term_putchar_internal(char c, int incr)
 { 
   if(c=='\n')
     {
@@ -124,8 +126,14 @@ void term_putchar(char c)
 	      term_scroll();
 	    }
 	}
+      if(incr)
+	++last_prompt_char[term_row];
       update_bios_cursor();
     }
+}
+void term_putchar(char c)
+{
+  term_putchar_internal(c, 1);
 }
 void term_puts(const char* str)
 {
@@ -191,4 +199,14 @@ void term_debug(const char* str)
   term_puts("] ");
   term_puts(str);
   term_putchar('\n');
+}
+void term_put_keyboard_char(char c)
+{
+  if(c!='\b') // backspace
+    term_putchar(c);
+  else
+    {
+      if(term_column>last_prompt_char[term_row])
+	term_putchar_internal(c, 0);
+    }
 }
