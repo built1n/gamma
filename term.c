@@ -62,7 +62,7 @@ void term_reset(void)
 void term_scroll(void) // scroll the terminal 1 line, seems buggy!
 {
   const size_t max=VGA_HEIGHT-1; // this is correct
-  for(size_t y=1;y<max;++y)
+  for(size_t y=0;y<max;++y)
     {
       for(size_t x=0;x<VGA_WIDTH;++x) // scroll all lines except last one
 	{
