@@ -1,7 +1,5 @@
 #include "gamma.h"
 #include <stdbool.h>
-byte ps2_current_scancode_set;
-enum PS2_State { READY, SENDING, WAITING } ps2_state;
 // Data port: 0x60, command: 0x64
 struct {
   int ctrldown : 1; // done
@@ -218,14 +216,6 @@ static void ps2_process_key(byte scancode)
     }
   // not a modifier
   ps2_qwerty_autogen(scancode);
-  if(scancode >=2 && scancode <=10) // number
-    {
-      if(modkeystatus.shiftdown)
-	term_putchar(number_shift_lookup[scancode-1]);
-      else
-	term_putchar(dtoc(scancode-1));
-      return;
-    }
   switch(scancode)
     {
     case 0x1C:
@@ -233,6 +223,30 @@ static void ps2_process_key(byte scancode)
       return;
     case 0x0E:
       term_putchar('\b');
+      return;
+    case 0x39:
+      term_putchar(' ');
+    case 0x53:
+      if(modkeystatus.metadown && modkeystatus.ctrldown)
+	{
+	  // reboot, or print message
+	  term_puts("CTRL-ALT-DELETE recieved!\n");
+	  // divide by zero to reset
+	  int i=0;
+	  int j=32;
+	  int crash=j/i;
+	}
+    }
+  if(scancode >=2 && scancode <=11) // number
+    {
+      // 2 : 1
+      // 3 : 2
+      // 10: 9
+      // 11 : 0
+      if(modkeystatus.shiftdown)
+	term_putchar(number_shift_lookup[scancode-2]);
+      else
+	term_putchar(scancode!=11?dtoc(scancode-1):'0');
       return;
     }
 }
@@ -246,6 +260,4 @@ void init_ps2()
   register_handler(33, &ps2_interrupt);
   outb(0x60, 0xF0);
   outb(0x60, 1); // scan code set 1 
-  outb(0x60, 0xED);
-  outb(0x60, 0x7); // all leds
 }
