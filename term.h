@@ -32,3 +32,4 @@ void term_putn_bin(uint32_t);
 void term_clear(void);
 void term_reset(void); // clear, reset cursor
 void term_put_keyboard_char(char); // put a backspaceable char
+// plz, plz, plz wish: PRINTF!!!
