@@ -23,18 +23,12 @@ bool ps2_attempt_command(byte command, byte data, bool sendByte)
 void ps2_interrupt(registers_t regs)
 {
   byte key=inb(0x60);
-  term_puts("Keyboard interrupt\n");
+  term_debug("Keypress detected");
+  term_puts("Scancode is ");
+  term_putn_hex((int)key);
+  term_putchar('\n');
 }
 void init_ps2()
 {
-  ps2_state=READY;
-  if(ps2_state==READY) // this is useless, keep it in case of future changes
-    {
-      // attempt_command sets ps2_state to sending, so just set it back
-      ps2_attempt_command(0xED, 7, true); // flash LED's
-      ps2_attempt_command(0xED, 2, true);
-      ps2_attempt_command(0xF4, 0, false); // enable scanning
-      register_handler(33, &ps2_interrupt);
-      ps2_state=READY;
-    }
+  register_handler(33, &ps2_interrupt);
 }
