@@ -13,5 +13,6 @@
 #include "page.h" //-+ 
 #include "heap.h" // +=Memory allocation
 #include "frame.h"//-+
+#include "io.h"
 typedef unsigned char byte;
 #endif
