@@ -1,8 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "gdt.h"
-#include "idt.h"
-#include "term.h"
+#include "gamma.h"
 extern void gdt_flush(uint32_t); // asm function
 gdt_entry_type gdt_entries[5];
 gdt_ptr gdt_pointer;
