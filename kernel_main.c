@@ -10,7 +10,8 @@ int kernel_main(struct multiboot *mboot_ptr)
 {
   init_terminal();
   term_puts("terminal initialized.\n");
-  init_desc_tables(); // buggy!
   term_puts("kernel booting...\n");
+  asm volatile ("int 0x3");
+  asm volatile ("int 0x4");
   return 0xDEADBEEF;
 }
