@@ -25,7 +25,6 @@ void term_setcolor(uint8_t color); // set color of text TO BE printed
 uint8_t term_getcolor(void);
 void term_putchar(char);
 void term_puts(const char*);
-#define term_debug(str) term_puts(str);
 void term_debug(const char*); //debug messages here!
 void term_putn_hex(uint32_t);
 void term_putn_dec(int32_t);

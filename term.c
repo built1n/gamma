@@ -153,7 +153,7 @@ void term_putn_dec(int32_t number)
 	}
       if(encountered_nonzero)
 	{
-	  putchar(buf[i]);
+	  term_putchar(buf[i]);
 	}
     }
 }
@@ -178,4 +178,12 @@ void term_putn_hex(uint32_t number)
       put_hex_char(((number & 0xF0000000 ) >> 28));
       number<<=4;
     }
+}
+void term_debug(const char* str)
+{
+  term_putchar('[');
+  term_putn_dec(time());
+  term_puts("] ");
+  term_puts(str);
+  term_putchar('\n');
 }
