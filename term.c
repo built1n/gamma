@@ -128,11 +128,12 @@ void term_puts(const char* str)
 }
 void term_putn_dec(int number)
 {
-  int firstDigit=1000000000;
+  int firstDigit=1000000000; // max digits in a 32-bit integer
   if(number<0)
     term_putchar('-');
-  while(number/firstDigit==0 && firstDigit>0)firstDigit/=10;
-  if(firstDigit!=0)
+  while(number/firstDigit==0 && firstDigit>0)
+    firstDigit/=10;
+  if(number!=0)
     {
       while(firstDigit>0)
 	{
