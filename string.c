@@ -7,9 +7,9 @@ size_t strlen(const char* str)
     ++ret;
   return ret;
 }
-char dtoc(uint8_t digit) // this should go into ctype.h, but this is fine
+char dtoc(uint8_t digit) // this should go into ctype.h, but this is ok
 {
-  return digit+'0';
+  return '0'+digit;
 }
 void memset(void* ptr, unsigned char value, size_t n)
 {
