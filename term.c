@@ -130,7 +130,7 @@ void term_puts(const char* str)
       term_putchar(str[i]);
     }
 }
-void term_putn_dec(int number)
+void term_putn_dec(int32_t number)
 {
   if(number<0)
     term_putchar('-');
@@ -140,7 +140,6 @@ void term_putn_dec(int number)
       return;
     }
   char buf[11];
-  // max 32-bit signed: 2147483648
   for(int i=0;i<10;++i)
     {
       buf[i]=number/1000000000;
@@ -149,7 +148,7 @@ void term_putn_dec(int number)
   buf[10]=0;
   term_puts(buf);
 }
-void term_putn_bin(unsigned int number)
+void term_putn_bin(uint32_t number)
 {
   for(int i=0;i<32;++i)
     {
@@ -162,7 +161,7 @@ void put_hex_char(byte n)
 {
   term_putchar(n<10?dtoc(n):55+n);
 }
-void term_putn_hex(unsigned int number)
+void term_putn_hex(uint32_t number)
 {
   term_puts("0x");
   for(int i=0;i<8;++i)
