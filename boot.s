@@ -20,7 +20,7 @@ stack_top:
 	.type _start, @function
 _start:				# This is where execution begins
 	cli			# Stop interrupts, this is a critical section
-	movl %esp, stack_top	# Initialize the stack
+	movl $stack_top, %esp	# Initialize the stack
 	push %ebp		# Add register ebp to the arguments
 	call kernel_main	# Start the kernel, SHOULD not return
 	cli			# Stop interrupts
