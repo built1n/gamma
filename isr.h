@@ -14,4 +14,5 @@ void init_isr();
 void register_handler(unsigned char number, void(*fnPtr)(registers_t));
 void unregister_handler(unsigned char number);
 void set_unhandled_panic(bool);
+void null_handler(registers_t);
 #endif

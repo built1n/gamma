@@ -2,8 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "gamma.h"
-bool panic_on_unhandled;
-void(*handlers[256])(registers_t);
+static bool panic_on_unhandled;
+static void(*handlers[256])(registers_t);
 void register_handler(byte number, void(*fnPtr)(registers_t))
 {
   handlers[number]=fnPtr;
@@ -52,15 +52,16 @@ void irq_handler(struct registers_t regs)
   else
     { 
 #ifndef NDEBUG
-      term_debug("received unhandled interrupt\n");
-      term_debug("interrupt number in decimal: ");
+      term_debug("received unhandled IRQ interrupt\n");
+      term_debug("IRQ interrupt number in decimal: ");
       term_putn_dec(regs.interrupt_number);
       term_putchar('\n');
-      term_debug("error code in decimal: ");
-      term_putn_dec(regs.error_code);
-      term_debug("\n");
 #endif
       if(panic_on_unhandled==true)
-	panic("unhandled interrupt");
+	panic("unhandled IRQ!");
     }
+}
+void null_handler(registers_t regs)
+{
+  return;
 }
