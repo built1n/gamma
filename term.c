@@ -142,8 +142,8 @@ void term_putn_dec(int32_t number)
   char buf[11];
   for(int i=0;i<10;++i)
     {
-      buf[i]=number/1000000000;
-      number*=1000000000;
+      buf[i]=dtoc(number/1000000000);
+      number*=10;
     };
   buf[10]=0;
   term_puts(buf);
