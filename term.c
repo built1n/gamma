@@ -5,11 +5,11 @@ static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
 size_t term_row, term_column;
 uint8_t term_color;
 uint16_t* term_buffer;
-uint8_t make_color(enum vga_color fg, enum vga_color bg)
+static uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg <<4;
 }
-uint16_t make_vgaentry(char c, uint8_t col)
+static uint16_t make_vgaentry(char c, uint8_t col)
 {
   uint16_t c16=c;
   uint16_t color16=col;
@@ -26,14 +26,14 @@ void term_clear(void)
 	}
     }
 }
-void term_move_cursor(uint16_t cursor_idx)
+static void term_move_cursor(uint16_t cursor_idx)
 {
   outb(0x3D4, 14);
   outb(0x3D5, cursor_idx >> 8); // high byte
   outb(0x3D4, 15);
   outb(0x3D5, cursor_idx); // low byte
 }
-void update_bios_cursor(void)
+static void update_bios_cursor(void)
 {
   uint16_t cursor_x=term_column, cursor_y=term_row;
   if(cursor_x==VGA_WIDTH)
@@ -57,7 +57,7 @@ void term_reset(void)
 {
   init_terminal();
 }
-void term_scroll(void) // scroll the terminal 1 line, seems buggy!
+static void term_scroll(void) // scroll the terminal 1 line, seems buggy!
 {
   const size_t max=VGA_HEIGHT-1; // this is correct
   for(size_t y=0;y<max;++y)
@@ -80,7 +80,7 @@ void term_setcolor(uint8_t color)
 {
   term_color=color;
 }
-void term_putentry(char c, uint8_t color, size_t x, size_t y)
+static void term_putentry(char c, uint8_t color, size_t x, size_t y)
 {
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
@@ -161,7 +161,7 @@ void term_putn_bin(unsigned int number)
       mask>>=1;
     }
 }
-void put_hex_char(unsigned char n)
+static void put_hex_char(unsigned char n)
 {
   if(n<=9)
     term_putchar(dtoc(n));

@@ -3,7 +3,7 @@
 #include "gamma.h"
 struct idt_entry_type idt_entries[256];
 struct idt_ptr idt_pointer;
-void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
+static void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
 {
   idt_entries[n].base_low=base & 0xFFFF;
   idt_entries[n].base_high=(base >> 16) & 0xFFFF;
@@ -14,7 +14,7 @@ void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
 extern void idt_flush(uint32_t); // ASM
 
 extern void init_gdt();
-void init_idt()
+static void init_idt()
 {
   idt_pointer.limit=sizeof(struct idt_entry_type) * 256 -1;
   idt_pointer.base=(uint32_t)&idt_entries;
