@@ -1,28 +1,26 @@
+#define TAB_WIDTH 4
 #include "gamma.h"
 #include <stdbool.h>
-// Data port: 0x60, command: 0x64
+// PS/2 Data port: 0x60, command port: 0x64
 struct {
   int ctrldown : 1; // done
   int shiftdown: 1; // done
-  int arrowstat: 3; // 0: none 1: up 2: down 3: left 4: right
+  int arrowstat: 3; // 0: none 1: up 2: down 3: left 4: right, not implemented
   int metadown : 1; // done
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
-  int numlock  : 1;
-  int capslock : 1; // caps lock down?
-  int scrlock  : 1;
-} modkeystatus;
-byte ledstatus=0;
+  int numlock  : 1; // num lock on?
+  int capslock : 1; // caps lock on?
+  int scrlock  : 1; // scroll lock?
+} modkeystatus; // keep track of modifier keys (ctrl, shift, etc)
+byte ledstatus=0; // keep track of LEDs
 void set_leds(int num, int caps, int scroll)
 {
   ledstatus=scroll | (num << 1) | (caps << 2);
   outb(0x60, 0xED);
-  term_puts("set_leds response: ");
-  term_putn_hex(inb(0x60));
-  term_putchar('\n');
   outb(0x60, ledstatus);
 }
-static char ps2_qwerty_autogen(byte scancode) // process qwerty keymap
+static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A-Z
 {
   char c=0;
   switch(scancode)
@@ -189,29 +187,32 @@ static char ps2_qwerty_autogen(byte scancode) // process qwerty keymap
     }
   if(c!=0)
     {
+      // we can do other stuff here, too
+      // for instance: append to a keyboard buffer
       term_put_keyboard_char(c);
       return c;
     }
   return 0;
 }
-const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'};
-static void ps2_process_key(byte scancode)
+const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'}; // array of number keys + shift
+static void ps2_process_key(byte scancode) // top level QWERTY PS/2 decoder
 {
+  // up code for any down code is down code + 0x80
   switch(scancode) // handle modifier keys
     {
-    case 0x01: // esc.
+    case 0x01: // esc
       modkeystatus.escdown=1;
       return;
-    case 0x81: // esc. up
+    case 0x81: // esc up
       modkeystatus.escdown=0;
       return;
     case 0x2A: case 0x36:
-      if(!modkeystatus.capslock)
+      if(!modkeystatus.capslock) // shift down
 	modkeystatus.shiftdown=1;
       else
 	modkeystatus.shiftdown=modkeystatus.shiftdown+1;
       break;
-    case 0xAA: case 0xB6:
+    case 0xAA: case 0xB6: // shift up
       if(!modkeystatus.capslock)
 	modkeystatus.shiftdown=0;
       else
@@ -246,83 +247,83 @@ static void ps2_process_key(byte scancode)
     return;
   switch(scancode)
     {
-    case 0x1C:
+    case 0x1C: // enter down
       term_put_keyboard_char('\n');
       return;
-    case 0x0E:
+    case 0x0E: // bksp down
       term_put_keyboard_char('\b');
       return;
-    case 0x39:
+    case 0x39: // space down
       term_put_keyboard_char(' ');
       return;
-    case 0x53:
-      if(modkeystatus.metadown && modkeystatus.ctrldown)
+    case 0x53: // delete down
+      if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
 	{
-	  // reboot, or print message
+	  // reboot, or do debugging stuff
 	  term_puts("CTRL-ALT-DELETE recieved!\n");
 	  panic("user-generated interrupt");
  	}
-    case 0x1A:
+    case 0x1A: // left bracket
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('{');
       else
 	term_put_keyboard_char('[');
       return;
-    case 0x1B:
+    case 0x1B: // right bracket
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('}');
       else
 	term_put_keyboard_char(']');
       return;
-    case 0x27:
+    case 0x27: // semicolon
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char(':');
       else
 	term_put_keyboard_char(';');
       return;
-    case 0x28:
+    case 0x28: // single quote
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('"');
       else
 	term_put_keyboard_char('\'');
       return;
-    case 0x29:
+    case 0x29: // tilde, backtick
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('~');
       else
 	term_put_keyboard_char('`');
       return;
-    case 0x2B:
+    case 0x2B: // backslash
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('|');
       else
 	term_put_keyboard_char('\\');
       return;
-    case 0x33:
+    case 0x33: // comma
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('<');
       else
 	term_put_keyboard_char(',');
       return;
-    case 0x34:
+    case 0x34: // period
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('>');
       else
 	term_put_keyboard_char('.');
       return;
-    case 0x35:
+    case 0x35: // forward slash
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('?');
       else
 	term_put_keyboard_char('/');
       return;
-    case 0x0C:
+    case 0x0C: // hyphen
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('_');
       else
 	term_put_keyboard_char('-');
       return;
-    case 0x0D:
+    case 0x0D: // equal sign
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('+');
       else
@@ -330,7 +331,7 @@ static void ps2_process_key(byte scancode)
       return;
     case 0x0F:
       // tab
-      for(int i=0;i<8;++i)
+      for(int i=0;i<TAB_WIDTH;++i)
 	term_put_keyboard_char(' ');
       return;
     }
@@ -339,19 +340,28 @@ static void ps2_process_key(byte scancode)
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char(number_shift_lookup[scancode-2]);
       else
-	term_put_keyboard_char(scancode!=11?dtoc(scancode-1):'0');
+	term_put_keyboard_char(scancode!=11? dtoc(scancode-1) : '0');
       return;
     }
 }
 void ps2_interrupt(registers_t regs)
 {
-  ps2_process_key(inb(0x60));
+  byte scancode=inb(0x60); // read the scancode
+  ps2_process_key(scancode); // process the scancode
 }
 void init_ps2()
 {
-  memset(&modkeystatus, 0, sizeof(modkeystatus));
-  register_handler(33, &ps2_interrupt);
-  outb(0x60, 0xF0);
-  outb(0x60, 1); // scan code set 1
-  set_leds(1, 1, 1);
+  outb(0x60, 0xEE); // send echo command
+  if(inb(0x60)==0xEE) // check for echo response: do we have a PS/2 keyboard?
+    {
+      memset(&modkeystatus, 0, sizeof(modkeystatus));
+      register_handler(33, &ps2_interrupt);
+      outb(0x60, 0xF0); 
+      outb(0x60, 1); // set to scan code set 1
+      set_leds(1, 1, 1); // flash the leds
+      set_leds(0, 0, 0);
+      term_puts("PS/2 keyboard initialized.\n");
+    }
+  else
+    term_puts("No PS/2 keyboard found!\n");
 }
