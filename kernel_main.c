@@ -5,21 +5,15 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void clock_tick(int);
 int kernel_main(struct multiboot *mboot_ptr)
 {
-  init_terminal();
-  term_puts("terminal initialized.\n");
   init_desc_tables();
   register_handler(8, &clock_tick);
+  set_unhandled_panic(false); // we've already registered all handlers
+  init_terminal();
+  term_puts("terminal initialized.\n");
   term_puts("kernel booting...\n");
-  // boot
-  int uptime=sys_uptime();
-  while(sys_uptime()!=uptime+1)
-    {
-      uptime=sys_uptime();
-      term_puts("1 second...\n");
-    }
-  // do stuff
-  return 0xDEADBEEF;
+ idle:
+  goto idle; // let the system run
+  return 0xDEADBEEF; // we should never get here
 }
