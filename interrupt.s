@@ -16,7 +16,7 @@ isr_handler_stub:
 	mov %ax, %fs
 	mov %ax, %gs
 	popa
-	add $8, %esp
+	addl $8, %esp
 	sti
 	iret
 	.global isr0
