@@ -16,19 +16,6 @@ static uint16_t make_vgaentry(char c, uint8_t col)
   uint16_t color16=col;      
   return c16 | color16 << 8;
 }
-void term_clear(void)
-{
-  for(size_t y=0;y<VGA_HEIGHT;++y)
-    {
-      for(size_t x=0;x<VGA_WIDTH;++x)
-	{
-	  const size_t idx=y*VGA_WIDTH+x;
-	  term_buffer[idx]=make_vgaentry(' ', term_color);
-	}
-    }
-  term_row=0;
-  term_column=0;
-}
 static void term_move_cursor(uint16_t cursor_idx)
 {
   outb(0x3D4, 14);
@@ -46,6 +33,20 @@ static void update_bios_cursor(void)
     }
   uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
   term_move_cursor(cursor_idx);
+}
+void term_clear(void)
+{
+  for(size_t y=0;y<VGA_HEIGHT;++y)
+    {
+      for(size_t x=0;x<VGA_WIDTH;++x)
+	{
+	  const size_t idx=y*VGA_WIDTH+x;
+	  term_buffer[idx]=make_vgaentry(' ', term_color);
+	}
+    }
+  term_row=0;
+  term_column=0;
+  update_bios_cursor();
 }
 void init_terminal(void)
 {
@@ -202,11 +203,11 @@ void term_debug(const char* str)
 }
 void term_put_keyboard_char(char c)
 {
-  if(c!='\b') // backspace
-    term_putchar(c);
+  if(c!='\b') // not backspace
+    term_putchar_internal(c, 0);
   else
     {
       if(term_column>last_prompt_char[term_row])
-	term_putchar_internal(c, 0);
+	term_putchar_internal('\b', 0);
     }
 }
