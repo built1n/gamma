@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "idt.h"
+#include "term.h"
 struct idt_entry_type idt_entries[256];
 struct idt_ptr idt_pointer;
 void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
@@ -20,6 +21,7 @@ void memset(void* ptr, unsigned char value, size_t n)
       *p++= value;
     }
 }
+extern void init_gdt();
 void init_idt()
 {
   idt_pointer.limit=sizeof(struct idt_entry_type) * 256 -1;
@@ -57,5 +59,15 @@ void init_idt()
   idt_set_gate(29, (uint32_t)isr29, 0x08, 0x8E);
   idt_set_gate(30, (uint32_t)isr30, 0x08, 0x8E);
   idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
+  term_puts("preparing to flush idt...");
+  for(int i=0;i<1000000;++i);
   idt_flush((uint32_t)&idt_pointer);
+}
+void init_desc_tables()
+{
+  term_puts("initializing gdt...");
+  init_gdt();
+  term_puts("idt...\n");
+  init_idt();
+  term_puts("done");
 }

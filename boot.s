@@ -16,7 +16,7 @@ stack_top:
 	.global _start
 	.type _start, @function
 _start:
-	movl stack_top, %esp	# Initialize the stack
+	movl %esp, stack_top	# Initialize the stack
 	push %ebp		# Add %ebp to the arguments of kernel_main
 	call kernel_main	# Start the kernel
 	cli			# Clear interrupts

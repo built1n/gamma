@@ -1,3 +1,5 @@
+#include <stddef.h>
+#include <stdint.h>
 typedef struct idt_entry_type
 {
   uint16_t base_low;

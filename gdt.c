@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "gdt.h"
 #include "idt.h"
+#include "term.h"
 extern void gdt_flush(uint32_t); // asm function
 gdt_entry_type gdt_entries[5];
 gdt_ptr gdt_pointer;
@@ -15,7 +16,7 @@ static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t acc
   gdt_entries[num].granularity|=(gran&0xF0);
   gdt_entries[num].access=access;
 }
-static void init_gdt()
+void init_gdt()
 {
   gdt_pointer.limit=(sizeof(gdt_entry_type)*5)-1;
   gdt_pointer.base=(uint32_t)&gdt_entries;
@@ -24,5 +25,7 @@ static void init_gdt()
   gdt_set_gate(2,0,0xFFFFFFFF, 0x92, 0xCF);
   gdt_set_gate(3,0,0xFFFFFFFF, 0xFA, 0xCF);
   gdt_set_gate(4,0,0xFFFFFFFF, 0xF2, 0xCF);
+  term_puts("preparing to flush gdt...");
+  for(int i=0;i<1000000;++i); // sleep
   gdt_flush((uint32_t)&gdt_pointer);
 }

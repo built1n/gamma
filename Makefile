@@ -1,5 +1,5 @@
 SOURCES=boot.o kernel_main.o string.o term.o util.o gdt.o idt.o isr.o interrupt.o gdt-as.o
-CFLAGS=-nostdlib -ffreestanding -fno-stack-protector -std=gnu99 -O2
+CFLAGS=-nostdlib -ffreestanding -fno-stack-protector -std=gnu99
 all: $(SOURCES)
 	ld $(SOURCES) -T linker.ld -o bootImage.bin
 clean:
