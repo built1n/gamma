@@ -1,6 +1,7 @@
 SOURCES=boot.o kernel_main.o string.o term.o util.o gdt.o idt.o isr.o interrupt.o gdt-as.o panic.o clock.o keyboard.o heap.o
 CFLAGS=-nostdlib -ffreestanding -fno-stack-protector -std=gnu99 -Wall
 ASFLAGS=-msyntax=att
+CC=gcc # Set to whatever your compiler is
 all: $(SOURCES)
 	ld $(SOURCES) -T linker.ld -o bootImage.bin
 clean:
