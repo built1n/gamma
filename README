@@ -3,3 +3,16 @@ After that, execution is interrupt-driven, so looking at the kernel_main
 function will be pointless: it's an infinite loop. The purpose of the kernel
 is to respond to interrupts, from user-mode software, and external hardware,
 e.g.: keyboards.
+Compiling on Winblows:
+[UNTESTED]
+You will need the MinGW GCC port as well as the make utility.
+You might need to change the CC variable in the Makefile to your compiler
+Change directory (at a command prompt) to the source directory
+Run 'make'
+This will generate a Multiboot-compatible boot image, called bootImage.bin
+Running:
+You will need the GRUB bootloader installed
+At the GRUB boot menu, hit 'c'
+Type: "multiboot (hd0, msdosX)/path_to_source_dir/bootImage.bin", where X is the number of your Windows partition.
+This will load the kernel
+Then type "boot", and the kernel will load
