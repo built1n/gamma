@@ -3,14 +3,8 @@
 #include <stdbool.h>
 #include "gamma.h"
 bool panic_on_unhandled;
-struct registers_t {
-  uint32_t ds;
-  uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-  uint32_t interrupt_number, error_code;
-  uint32_t eip, cs, eflags, useresp, ss;
-} __attribute__((packed));
-void(*handlers[256])(int);
-void register_handler(unsigned int number, void(*fnPtr)(int))
+void(*handlers[256])(registers_t);
+void register_handler(unsigned int number, void(*fnPtr)(registers_t))
 {
   handlers[number]=fnPtr;
 }
@@ -20,10 +14,8 @@ void unregister_handler(unsigned int number)
 }
 void init_isr()
 {
-  for(unsigned int i=0;i<256;++i)
-    {
-      unregister_handler(i);
-    }
+  term_debug("Zeroing handlers[]"); 
+  memset(&handlers, 0, sizeof(void*)*256);
 }
 void set_unhandled_panic(bool b)
 {
@@ -31,17 +23,34 @@ void set_unhandled_panic(bool b)
 }
 void isr_handler(struct registers_t regs) // high-level handler for interrupts
 {
-  if(handlers[regs.interrupt_number]==0 && panic_on_unhandled==true)
+  if(handlers[regs.interrupt_number]==0)
     { 
-      term_puts("received unhandled interrupt\n");
-      term_puts("interrupt number in decimal: ");
+#ifndef NDEBUG
+      term_debug("received unhandled interrupt\n");
+      term_debug("interrupt number in decimal: ");
       term_putn_dec(regs.interrupt_number);
       term_putchar('\n');
-      term_puts("error code in decimal: ");
+      term_debug("error code in decimal: ");
       term_putn_dec(regs.error_code);
-      term_putchar('\n');
-      panic("unhandled interrupt");
+      term_debug("\n");
+#endif
+      if(panic_on_unhandled==true)
+	panic("unhandled interrupt");
     }
   else
-    handlers[regs.interrupt_number](regs.error_code);
+    {
+      handlers[regs.interrupt_number](regs);
+    }
+}
+void irq_handler(struct registers_t regs)
+{
+  if(regs.interrupt_number >= 40) // sent by slave PIC
+    {
+      outb(0xA0, 0x20); // slave EOI
+    }
+  outb(0x20, 0x20); // master EOI
+  if(handlers[regs.interrupt_number]!=0)
+    {
+      handlers[regs.interrupt_number](regs);
+    }
 }
