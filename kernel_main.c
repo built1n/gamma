@@ -2,28 +2,24 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "gamma.h"
-void gpf(registers_t regs)
-{
-  term_puts("General protection fault\n");
-}
 void dividebyzero(registers_t regs)
 {
-  panic("Divide by zero");
+  panic("Attempted division by zero!");
 }
-static void early_init(void)
+static void early_init(void) // do low-level init
 {
-  init_desc_tables();
+  init_desc_tables(); // GDT, IDT
   init_terminal();
-  term_puts("terminal initialized.\n");
-  init_clock(100); // do this AFTER terminal initialization 
-  term_puts("clock initialized.\n");
+  term_puts("Terminal initialized.\n");
+  init_clock(100);
+  term_puts("System clock initialized.\n");
 }
 static void init(void)
 {
   init_ps2();
-  term_puts("keyboard initialized.\n");
+  term_puts("PS/2 keyboard initialized.\n");
   // register interrupt handlers
-  register_handler(0xD, &null_handler);
+  register_handler(0xD, &null_handler); /// FIXME: int 13 gets sent constantly!
   register_handler(0, &dividebyzero);
   set_unhandled_panic(true); // we've already registered all the handlers
 }
@@ -37,7 +33,7 @@ int kernel_main(struct multiboot *mboot_ptr) // kernel entry point
   init();
   asm volatile("sti"); // enable interrupts
   term_puts("System initialized.\n");
-  term_puts("(Try to) backspace over me!");
+  term_puts("");
  sys_run:
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
