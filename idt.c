@@ -82,11 +82,9 @@ static void init_idt()
   set_unhandled_panic(false);
   idt_flush((uint32_t)&idt_pointer);
 }
-void init_desc_tables()
+void init_desc_tables() // do not print anything, the terminal may not be initialized
 {
   init_gdt();
-  term_puts("GDT initialized.\n");
   init_idt();
-  term_puts("IDT initialized.\n");
   init_isr();
 }
