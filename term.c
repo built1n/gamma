@@ -17,7 +17,7 @@ uint16_t make_vgaentry(char c, uint8_t col)
   uint16_t color16=col;
   return c16 | color16 << 8;
 }
-void term_clear()
+void term_clear(void)
 {
   for(size_t y=0;y<VGA_HEIGHT;++y)
     {
@@ -27,16 +27,28 @@ void term_clear()
 	  term_buffer[idx]=make_vgaentry(' ', term_color);
 	}
     }
+}
+void term_move_cursor(uint16_t cursor_idx)
+{
+  outb(0x3D4, 14);
+  outb(0x3D5, cursor_idx >> 8); // high byte
+  outb(0x3D4, 15);
+  outb(0x3D5, cursor_idx); // low byte
 }  
-void init_terminal()
+void init_terminal(void)
 {
   term_row=0;
   term_column=0;
   term_color=make_color(COLOR_WHITE, COLOR_BLACK);
   term_buffer=(uint16_t*)0xB8000;
   term_clear();
+  term_move_cursor(0);
 }
-void term_scroll() // scroll the terminal 1 line
+void term_reset(void)
+{
+  init_terminal();
+}
+void term_scroll(void) // scroll the terminal 1 line
 {
   const size_t max=VGA_HEIGHT-1;
   for(size_t y=1;y<max;++y)
@@ -64,13 +76,6 @@ void term_putentry(char c, uint8_t color, size_t x, size_t y)
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
 }
-void term_move_cursor(uint16_t cursor_idx)
-{
-  outb(0x3D4, 14);
-  outb(0x3D5, cursor_idx >> 8); // high byte
-  outb(0x3D4, 15);
-  outb(0x3D5, cursor_idx); // low byte
-}
 void term_putchar(char c)
 { 
   if(c=='\n')
@@ -79,6 +84,21 @@ void term_putchar(char c)
       if(++term_row==VGA_HEIGHT)
 	{
 	  term_scroll();
+	}
+    }
+  else if(c=='\b')
+    {
+      if(--term_column>=0) // this will not go past newlines
+	{
+	  // update the cursor 
+	  size_t cursor_x=term_column, cursor_y=term_row;
+	  if(cursor_x==VGA_WIDTH)
+	    {
+	      cursor_x=0;
+	      ++cursor_y;
+	    }
+	  uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
+	  term_move_cursor(cursor_idx);
 	}
     }
   else // do not increase the column in case of a newline
@@ -114,11 +134,16 @@ void term_puts(const char* str)
 void term_putn_dec(int number)
 {
   int firstDigit=1000000000;
-  while(number/firstDigit==0)firstDigit/=10;
+  while(number/firstDigit==0 && firstDigit>0)firstDigit/=10;
+  if(firstDigit!=0)
+    {
   while(firstDigit>0)
     {
-      putchar(dtoc((uint8_t)number/firstDigit));
+      term_putchar(dtoc((uint8_t)number/firstDigit));
       number%=firstDigit;
       firstDigit/=10;
     }
+    }
+  else
+    term_putchar('0');
 }
