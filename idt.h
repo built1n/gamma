@@ -1,18 +1,20 @@
 #include <stddef.h>
 #include <stdint.h>
-typedef struct idt_entry_type
+struct idt_entry_type
 {
   uint16_t base_low;
   uint16_t sel;
   uint8_t zero; // take up space
   uint8_t flags;
   uint16_t base_high;
-} idt_entry_type __attribute__((packed));
-typedef struct idt_ptr
+} __attribute__((packed));
+typedef struct idt_entry_type idt_entry_type;
+struct idt_ptr
 {
   uint16_t limit;
   uint32_t base;
-} idt_ptr __attribute__((packed));
+} __attribute__((packed));
+typedef struct idt_ptr idt_ptr;
 // our interrupt handlers!
 extern void isr0();
 extern void isr1();

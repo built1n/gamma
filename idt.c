@@ -59,15 +59,10 @@ void init_idt()
   idt_set_gate(29, (uint32_t)isr29, 0x08, 0x8E);
   idt_set_gate(30, (uint32_t)isr30, 0x08, 0x8E);
   idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
-  term_puts("preparing to flush idt...");
-  for(int i=0;i<1000000;++i);
   idt_flush((uint32_t)&idt_pointer);
 }
 void init_desc_tables()
 {
-  term_puts("initializing gdt...");
-  init_gdt(); // bug!!!
-  term_puts("idt...\n");
+  init_gdt();
   init_idt();
-  term_puts("done");
 }
