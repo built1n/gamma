@@ -3,9 +3,6 @@
 uint64_t tick; // hundredths of a second
 void clock_tick(registers_t regs)
 {
-  term_puts("Clock tick: ");
-  term_putn_dec((int)tick);
-  term_putchar('\n');
   ++tick;
 }
 void init_clock(uint32_t frequency)
@@ -18,7 +15,7 @@ void init_clock(uint32_t frequency)
   outb(0x40, low);
   outb(0x40, high);
 }
-uint64_t ms_time(void)
+uint64_t time(void)
 {
-  return tick * 100; 
+  return tick; 
 }
