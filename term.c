@@ -99,6 +99,7 @@ void term_putchar(char c)
 	{
 	  term_scroll();
 	}
+      update_bios_cursor();
     }
   else if(c=='\b')
     {
@@ -107,8 +108,13 @@ void term_putchar(char c)
 	  term_buffer[term_row * VGA_WIDTH+term_column]=make_vgaentry(' ', term_color);
 	  update_bios_cursor();
 	} 
+      else
+	{
+	  ++term_column;
+	  update_bios_cursor();
+	}
     }
-  else // do not increase the column in case of a newline
+  else // do not increase the column in case of a newline or backspace
     {
       term_putentry(c, term_color, term_column, term_row);
       if(++term_column==VGA_WIDTH)
