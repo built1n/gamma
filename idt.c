@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "idt.h"
-#include "term.h"
+#include "gamma.h"
 struct idt_entry_type idt_entries[256];
 struct idt_ptr idt_pointer;
 void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
@@ -13,14 +12,7 @@ void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
   idt_entries[n].flags=flags; // OR flags by 0x60 to go to user mode
 } 
 extern void idt_flush(uint32_t); // ASM
-void memset(void* ptr, unsigned char value, size_t n)
-{
-  unsigned char *p=ptr;
-  while(--n)
-    {
-      *p++= value;
-    }
-}
+
 extern void init_gdt();
 void init_idt()
 {
@@ -67,4 +59,5 @@ void init_desc_tables()
   term_puts("GDT initialized.\n");
   init_idt();
   term_puts("IDT initialized.\n");
+  init_isr();
 }
