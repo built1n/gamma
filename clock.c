@@ -6,5 +6,5 @@ void clock_tick(int err)
 }
 unsigned long sys_uptime(void)
 {
-  return (unsigned long)uptime;
+  return (unsigned long)sysuptime;
 }
