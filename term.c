@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stddef.h>
 static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
-size_t term_row, term_column;
-uint8_t term_color;
-uint16_t* term_buffer;
+static size_t term_row, term_column;
+static uint8_t term_color;
+static uint16_t* term_buffer;
 static uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg <<4;
@@ -80,6 +80,10 @@ void term_setcolor(uint8_t color)
 {
   term_color=color;
 }
+uint8_t term_getcolor(void)
+{
+  return term_color;
+}
 static void term_putentry(char c, uint8_t color, size_t x, size_t y)
 {
   const size_t idx=y*VGA_WIDTH+x;
@@ -128,79 +132,42 @@ void term_puts(const char* str)
 }
 void term_putn_dec(int number)
 {
-  int firstDigit=1000000000; // max digits in a 32-bit integer
   if(number<0)
     term_putchar('-');
-  while(number/firstDigit==0 && firstDigit>0)
-    firstDigit/=10;
-  if(number!=0)
+  if(number==0) // exit early
     {
-      while(firstDigit>0)
-	{
-	  term_putchar(dtoc((uint8_t)number/firstDigit));
-	  number%=firstDigit;
-	  firstDigit/=10;
-	}
+      term_putchar('0');
+      return;
     }
-  else
-    term_putchar('0');
+  char buf[11];
+  // max 32-bit signed: 2147483648
+  for(int i=0;i<10;++i)
+    {
+      buf[i]=number/1000000000;
+      number*=1000000000;
+    };
+  buf[10]=0;
+  term_puts(buf);
 }
 void term_putn_bin(unsigned int number)
 {
-  int mask=0x80000000;
-  while(mask!=0)
+  for(int i=0;i<32;++i)
     {
-      if((number & mask)==0)
-	{
-	  term_putchar('0');
-	}
-      else
-	{
-	  term_putchar('1');
-	}
-      mask>>=1;
+      char c=((number & 0x80000000 )>> 31 == 1)?'1':'0';
+      term_putchar(c);
+      number<<=1;
     }
 }
-static void put_hex_char(unsigned char n)
+void put_hex_char(byte n)
 {
-  if(n<=9)
-    term_putchar(dtoc(n));
-  else
-    {
-      char c;
-      switch(n)
-	{
-	case 10:
-	  c='A';
-	  break;
-	case 11:
-	  c='B';
-	  break;
-	case 12:
-	  c='C';
-	  break;
-	case 13:
-	  c='D';
-	  break;
-	case 14:
-	  c='E';
-	  break;
-	case 15:
-	  c='F';
-	  break;
-	default:
-	  c='?';
-	}
-      term_putchar(c);
-    }
+  term_putchar(n<10?dtoc(n):55+n);
 }
 void term_putn_hex(unsigned int number)
 {
   term_puts("0x");
-  int mask=0xF0000000;
   for(int i=0;i<8;++i)
     {
-      put_hex_char(number & mask);
-      mask >>=4;
+      put_hex_char(((number & 0xF0000000 ) >> 28));
+      number<<=4;
     }
 }
