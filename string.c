@@ -11,3 +11,11 @@ char dtoc(uint8_t digit) // this should go into ctype.h, but this is fine
 {
   return digit+'0';
 }
+void memset(void* ptr, unsigned char value, size_t n)
+{
+  unsigned char *p=ptr;
+  while(--n)
+    {
+      *p++= value;
+    }
+}
