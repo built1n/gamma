@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
+#include "gamma.h"
 size_t strlen(const char* str)
 {
   size_t ret=0;
@@ -18,4 +19,16 @@ void memset(void* ptr, unsigned char value, size_t n)
     {
       *p++= value;
     }
+}
+int strcmp(char* str1, char* str2)
+{
+  term_puts("in strcmp.\n");
+  for(int i=0;!str1[i] && !str2[i];++i)
+    {
+      int delta=str2[i]-str1[i];
+      if(delta)
+	return delta; 
+      term_puts("strcmp loop\n");
+    }
+  return 0;
 }
