@@ -17,6 +17,10 @@ void dividebyzero(registers_t regs)
 {
   panic("Attempted division by zero!");
 }
+void keydown(char c)
+{
+  term_puts("key down!");
+}
 static void early_init(void) // do low-level init
 {
   init_desc_tables(); // GDT, IDT
@@ -30,6 +34,7 @@ static void early_init(void) // do low-level init
 static void init(void)
 {
   init_ps2();
+  register_keyboard_handler(&keydown);
   term_puts("PS/2 keyboard initialized.\n");
   // register interrupt handlers
   register_handler(0, &dividebyzero);

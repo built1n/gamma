@@ -13,6 +13,7 @@
 #define TAB_WIDTH 4
 #include "gamma.h"
 #include <stdbool.h>
+static void(*kbdhandler)(char)=0;
 // PS/2 Data port: 0x60, command port: 0x64
 struct {
   int ctrldown : 1; // done
@@ -26,6 +27,10 @@ struct {
   int scrlock  : 1; // scroll lock?
 } modkeystatus; // keep track of modifier keys (ctrl, shift, etc)
 byte ledstatus=0; // keep track of LEDs
+void register_keyboard_handler(void(*fnPtr)(char))
+{
+  kbdhandler=fnPtr;
+}
 void set_leds(int num, int caps, int scroll)
 {
   ledstatus=scroll | (num << 1) | (caps << 2);
@@ -193,8 +198,100 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       else
 	c='z';
       break;
+    case 0x1C: // enter down
+      c='\n';
+      break;
+    case 0x39: // space down
+      c=' ';
+      break;
+    case 0x0E: // bksp down
+      c='\b';
+      break;;
     default:
       c=0;
+      break;
+    }
+    switch(scancode)
+    {
+    case 0x53: // delete down
+      if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
+	{
+	  // meant to be a debug aid
+	  term_clear();
+	  return;
+	}
+      return;
+    case 0x1A: // left bracket
+      if(modkeystatus.shiftdown)
+	c='{';
+      else
+	c='[';
+      break;
+    case 0x1B: // right bracket
+      if(modkeystatus.shiftdown)
+	c='}';
+      else
+	c=']';
+      break;
+    case 0x27: // semicolon
+      if(modkeystatus.shiftdown)
+	c=':';
+      else
+	c=';';
+      break;
+    case 0x28: // single quote
+      if(modkeystatus.shiftdown)
+	c='"';
+      else
+	c='\'';
+      break;
+    case 0x29: // tilde, backtick
+      if(modkeystatus.shiftdown)
+	c='~';
+      else
+	c='`';
+      break;
+    case 0x2B: // backslash
+      if(modkeystatus.shiftdown)
+	c='|';
+      else
+	c='\\';
+      break;
+    case 0x33: // comma
+      if(modkeystatus.shiftdown)
+	c='<';
+      else
+	c=',';
+      break;
+    case 0x34: // period
+      if(modkeystatus.shiftdown)
+	c='>';
+      else
+	c='.';
+      break;
+    case 0x35: // forward slash
+      if(modkeystatus.shiftdown)
+	c='?';
+      else
+	c='/';
+      break;
+    case 0x0C: // hyphen
+      if(modkeystatus.shiftdown)
+	c='_';
+      else
+	c='-';
+      break;
+    case 0x0D: // equal sign
+      if(modkeystatus.shiftdown)
+	c='+';
+      else
+	c='=';
+      break;
+    case 0x0F:
+      // tab
+      for(int i=0;i<TAB_WIDTH;++i)
+	term_put_keyboard_char(' ');
+      c='\t';
       break;
     }
   if(c!=0)
@@ -202,6 +299,10 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       // we can do other stuff here, too
       // for instance: append to a keyboard buffer
       term_put_keyboard_char(c);
+      if(kbdhandler)
+	{
+	  kbdhandler(c);
+	}
       return c;
     }
   return 0;
@@ -257,97 +358,6 @@ static void ps2_process_key(byte scancode) // top level QWERTY PS/2 decoder
   // not a modifier
   if(ps2_qwerty_autogen(scancode))
     return;
-  switch(scancode)
-    {
-    case 0x1C: // enter down
-      term_put_keyboard_char('\n');
-      return;
-    case 0x0E: // bksp down
-      term_put_keyboard_char('\b');
-      return;
-    case 0x39: // space down
-      term_put_keyboard_char(' ');
-      return;
-    case 0x53: // delete down
-      if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
-	{
-	  // meant to be a debug aid
-	  term_clear();
-	  return;
-	}
-      return;
-    case 0x1A: // left bracket
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('{');
-      else
-	term_put_keyboard_char('[');
-      return;
-    case 0x1B: // right bracket
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('}');
-      else
-	term_put_keyboard_char(']');
-      return;
-    case 0x27: // semicolon
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char(':');
-      else
-	term_put_keyboard_char(';');
-      return;
-    case 0x28: // single quote
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('"');
-      else
-	term_put_keyboard_char('\'');
-      return;
-    case 0x29: // tilde, backtick
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('~');
-      else
-	term_put_keyboard_char('`');
-      return;
-    case 0x2B: // backslash
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('|');
-      else
-	term_put_keyboard_char('\\');
-      return;
-    case 0x33: // comma
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('<');
-      else
-	term_put_keyboard_char(',');
-      return;
-    case 0x34: // period
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('>');
-      else
-	term_put_keyboard_char('.');
-      return;
-    case 0x35: // forward slash
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('?');
-      else
-	term_put_keyboard_char('/');
-      return;
-    case 0x0C: // hyphen
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('_');
-      else
-	term_put_keyboard_char('-');
-      return;
-    case 0x0D: // equal sign
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char('+');
-      else
-	term_put_keyboard_char('=');
-      return;
-    case 0x0F:
-      // tab
-      for(int i=0;i<TAB_WIDTH;++i)
-	term_put_keyboard_char(' ');
-      return;
-    }
   if(scancode >=2 && scancode <=11) // number
     {
       if(modkeystatus.shiftdown)
