@@ -8,7 +8,20 @@ struct {
   int metadown : 1; // done
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
+  int numlock  : 1;
+  int capslock : 1; // caps lock down?
+  int scrlock  : 1;
 } modkeystatus;
+byte ledstatus=0;
+void set_leds(int num, int caps, int scroll)
+{
+  ledstatus=scroll | (num << 1) | (caps << 2);
+  outb(0x60, 0xED);
+  term_puts("set_leds response: ");
+  term_putn_hex(inb(0x60));
+  term_putchar('\n');
+  outb(0x60, ledstatus);
+}
 static char ps2_qwerty_autogen(byte scancode) // process qwerty keymap
 {
   char c=0;
@@ -181,7 +194,6 @@ static char ps2_qwerty_autogen(byte scancode) // process qwerty keymap
     }
   return 0;
 }
-byte ledstatus=0;
 const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'};
 static void ps2_process_key(byte scancode)
 {
@@ -194,11 +206,17 @@ static void ps2_process_key(byte scancode)
       modkeystatus.escdown=0;
       return;
     case 0x2A: case 0x36:
-      modkeystatus.shiftdown=1;
+      if(!modkeystatus.capslock)
+	modkeystatus.shiftdown=1;
+      else
+	modkeystatus.shiftdown=modkeystatus.shiftdown+1;
       break;
     case 0xAA: case 0xB6:
-      modkeystatus.shiftdown=0;
-      return;
+      if(!modkeystatus.capslock)
+	modkeystatus.shiftdown=0;
+      else
+	modkeystatus.shiftdown=modkeystatus.shiftdown+1;
+      break;
     case 0x1D: // left ctrl.
       if(modkeystatus.recievede0) // right ctrl.
 	modkeystatus.recievede0=0;
@@ -324,15 +342,6 @@ static void ps2_process_key(byte scancode)
 	term_put_keyboard_char(scancode!=11?dtoc(scancode-1):'0');
       return;
     }
-}
-void set_leds(int num, int caps, int scroll)
-{
-  ledstatus=scroll | (num << 1) | (caps << 2);
-  outb(0x60, 0xED);
-  term_puts("set_leds response: ");
-  term_putn_hex(inb(0x60));
-  term_putchar('\n');
-  outb(0x60, ledstatus);
 }
 void ps2_interrupt(registers_t regs)
 {
