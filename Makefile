@@ -7,5 +7,6 @@ clean:
 	rm *.o -f
 	rm bootImage.bin -f
 	rm *~ -f
+	rm a.out -f
 install: all
 	cp bootImage.bin /boot/project_gamma
