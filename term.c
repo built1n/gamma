@@ -1,6 +1,7 @@
 #include "gamma.h"
 #include <stdint.h>
 #include <stddef.h>
+#include <stdarg.h>
 static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
 static size_t term_row, term_column;
 static uint8_t term_color;
@@ -16,27 +17,22 @@ static uint16_t make_vgaentry(char c, uint8_t col)
   uint16_t color16=col;      
   return c16 | color16 << 8;
 }
-static void term_move_cursor(uint16_t cursor_idx)
+static void move_cursor(uint16_t cursor_idx) // do the actual moving of the cursor
 {
   outb(0x3D4, 14);
   outb(0x3D5, cursor_idx >> 8); // high byte
   outb(0x3D4, 15);
   outb(0x3D5, cursor_idx); // low byte
 }
-static void update_bios_cursor(void)
+static void update_bios_cursor(void) // calculate the index of the cursor, then move it 
 {
   uint16_t cursor_x=term_column, cursor_y=term_row;
-  if(cursor_x==VGA_WIDTH)
-    {
-      cursor_x=0;
-      ++cursor_y;
-    }
   uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
-  term_move_cursor(cursor_idx);
+  move_cursor(cursor_idx);
 }
 void term_clear(void)
 {
-  for(size_t y=0;y<VGA_HEIGHT;++y)
+  for(size_t y=0;y<=VGA_HEIGHT;++y)
     {
       for(size_t x=0;x<VGA_WIDTH;++x)
 	{
@@ -44,6 +40,7 @@ void term_clear(void)
 	  term_buffer[idx]=make_vgaentry(' ', term_color);
 	}
     }
+  memset(&last_prompt_char, 0, sizeof(last_prompt_char));
   term_row=0;
   term_column=0;
   update_bios_cursor();
@@ -55,32 +52,34 @@ void init_terminal(void)
   term_color=make_color(COLOR_WHITE, COLOR_BLACK);
   term_buffer=(uint16_t*)0xB8000; // frame buffer location, provided by BIOS
   term_clear();
-  term_move_cursor(0);
+  move_cursor(0); // best to use update_bios_cursor, but this is faster
 }
 void term_reset(void)
 {
   init_terminal();
 }
-static void term_scroll(void) // scroll the terminal 1 line, seems buggy!
+static void scroll_if_needed(void) // scroll the terminal 1 line, seems buggy!
 {
-  const size_t max=VGA_HEIGHT-1; // this is correct
-  for(size_t y=0;y<max;++y)
+  if(term_row>VGA_HEIGHT)
     {
-      for(size_t x=0;x<VGA_WIDTH;++x) // scroll all lines except last one
+      for(uint16_t y=0;y<VGA_HEIGHT;++y)
 	{
-	  const size_t idx1=y*VGA_WIDTH+x, idx2=(y+1)*VGA_WIDTH+x;
-	  term_buffer[idx1]=term_buffer[idx2];
+	  for(uint16_t x=0;x<VGA_WIDTH;++x) // scroll all lines except last one
+	    {
+	      const uint16_t idx1=y*VGA_WIDTH+x, idx2=(y+1)*VGA_WIDTH+x;
+	      term_buffer[idx1]=term_buffer[idx2];
+	    }
+	  last_prompt_char[y]=last_prompt_char[y+1];
 	}
-      last_prompt_char[y]=last_prompt_char[y+1];
+      last_prompt_char[VGA_HEIGHT]=0;
+      for(uint16_t x=0;x<VGA_WIDTH;++x) // fill last line with spaces
+	{
+	  const uint16_t idx=(VGA_HEIGHT)*VGA_WIDTH+x;
+	  term_buffer[idx]=make_vgaentry(' ', term_color);
+	}
+      term_row=VGA_HEIGHT;
+      update_bios_cursor();
     }
-  last_prompt_char[VGA_HEIGHT-1]=0;
-  for(size_t x=0;x<VGA_WIDTH;++x) // fill last line with spaces
-    {
-      const size_t idx=(VGA_HEIGHT-1)*VGA_WIDTH+x;
-      term_buffer[idx]=make_vgaentry(' ', term_color);
-    }
-  term_row=max;
-  update_bios_cursor();
 }
 void term_setcolor(uint8_t color)
 {
@@ -95,16 +94,13 @@ static void term_putentry(char c, uint8_t color, size_t x, size_t y)
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
 }
-static void term_putchar_internal(char c, int incr)
+// print character c, and increment the last_prompt_char if no_bksp is nonzero
+static void term_putchar_internal(char c, int no_backspace)
 { 
   if(c=='\n')
     {
       term_column=0;
-      if(++term_row==VGA_HEIGHT)
-	{
-	  term_scroll();
-	}
-      update_bios_cursor();
+      ++term_row;
     }
   else if(c=='\b')
     {
@@ -114,25 +110,30 @@ static void term_putchar_internal(char c, int incr)
 	  --term_column;
 	  term_putentry(' ', term_color, term_column, term_row);
 	}
-      update_bios_cursor();
+      else
+	{
+	  if((int32_t)term_row-1>=0) // this will go past newlines, but not off the screen
+	    {
+	      --term_row;
+	      term_column=last_prompt_char[term_row]; // should make a new array of last_char, so we know what to set this to, instead of the last PROMPT char
+	    }
+	}
     }
-  else // do not increase the column in case of a newline or backspace
+  else if(c!=0) // not a newline or backspace, or null
     {
       term_putentry(c, term_color, term_column, term_row);
       if(++term_column==VGA_WIDTH)
 	{
 	  term_column=0;
-	  if(++term_row==VGA_HEIGHT)
-	    {
-	      term_scroll();
-	    }
+	  ++term_row;
 	}
-      if(incr)
+      if(no_backspace)
 	++last_prompt_char[term_row];
-      update_bios_cursor();
     }
+  scroll_if_needed();
+  update_bios_cursor();
 }
-void term_putchar(char c)
+void term_putchar(char c) // non-backspacable
 {
   term_putchar_internal(c, 1);
 }
@@ -201,13 +202,17 @@ void term_debug(const char* str)
   term_puts(str);
   term_putchar('\n');
 }
-void term_put_keyboard_char(char c)
+void term_put_keyboard_char(char c) // put a backspacable character
 {
-  if(c!='\b') // not backspace
+  if(c!='\b') // c is not backspace
     term_putchar_internal(c, 0);
-  else
+  else // backspace!
     {
       if(term_column>last_prompt_char[term_row])
 	term_putchar_internal('\b', 0);
     }
+}
+int kprintf(const char* fmt, ...)
+{
+  va_list va;
 }

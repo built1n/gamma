@@ -23,13 +23,14 @@ enum vga_color
 void init_terminal(void);
 void term_setcolor(uint8_t color); // set color of text TO BE printed
 uint8_t term_getcolor(void);
-void term_putchar(char); // non-backspacable char
-void term_puts(const char*);
+void term_putchar(char); // print a non-backspacable char
+void term_puts(const char*); // print a non-backspacable string
 void term_debug(const char*); // print a debug message
-void term_putn_hex(uint32_t);
-void term_putn_dec(int32_t);
-void term_putn_bin(uint32_t);
+void term_putn_hex(uint32_t); // non-backspacable
+void term_putn_dec(int32_t); // same
+void term_putn_bin(uint32_t); // same
 void term_clear(void);
-void term_reset(void); // clear, reset cursor
+void term_reset(void); // clear, reset cursor, color
 void term_put_keyboard_char(char); // put a backspaceable char
-// plz, plz, plz wish: PRINTF!!!
+// wish: PRINTF, PLZ, PLZ, PLZ!!!!!!!
+int kprintf(const char* fmt, ...);
