@@ -3,8 +3,9 @@
 uint64_t tick; // hundredths of a second
 void clock_tick(registers_t regs)
 {
-  term_puts("Clock tick...");
-  // there could be a problem with number printing in interrupt handlers
+  term_puts("Clock tick: ");
+  term_putn_dec((int)tick);
+  term_putchar('\n');
   ++tick;
 }
 void init_clock(uint32_t frequency)
