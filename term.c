@@ -124,8 +124,7 @@ void term_putchar(char c)
 }
 void term_puts(const char* str)
 {
-  const size_t length=strlen(str);
-  for(size_t i=0;i<length;++i)
+  for(size_t i=0;str[i]!=0;++i)
     {
       term_putchar(str[i]);
     }
@@ -139,14 +138,24 @@ void term_putn_dec(int32_t number)
       term_putchar('0');
       return;
     }
-  char buf[11];
+  char buf[10];
   for(int i=0;i<10;++i)
     {
-      buf[i]=dtoc(number/1000000000);
-      number*=10;
-    };
-  buf[10]=0;
-  term_puts(buf);
+      buf[9-i]=dtoc(number%10);
+      number/=10;
+    }
+  uint8_t encountered_nonzero=0;
+  for(int i=0;i<10;++i)
+    {
+      if(buf[i]!='0')
+	{
+	  encountered_nonzero=1;
+	}
+      if(encountered_nonzero)
+	{
+	  putchar(buf[i]);
+	}
+    }
 }
 void term_putn_bin(uint32_t number)
 {
