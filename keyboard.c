@@ -9,170 +9,180 @@ struct {
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
 } modkeystatus;
+extern char* inputbuf;
+extern int inputbuf_idx;
 static void ps2_qwerty_autogen(byte scancode)
 {
+  char c=0;
   switch(scancode)
     {
     case 0x1E:
       if(modkeystatus.shiftdown)
-	term_putchar('A');
+	c='A';
       else
-	term_putchar('a');
+	c='a';
       break;
     case 0x30:
       if(modkeystatus.shiftdown)
-	term_putchar('B');
+	c='B';
       else
-	term_putchar('b');
+	c='b';
       break;
     case 0x2E:
       if(modkeystatus.shiftdown)
-	term_putchar('C');
+	c='C';
       else
-	term_putchar('c');
+	c='c';
       break;
     case 0x20:
       if(modkeystatus.shiftdown)
-	term_putchar('D');
+	c='D';
       else
-	term_putchar('d');
+	c='d';
       break;
     case 0x12:
       if(modkeystatus.shiftdown)
-	term_putchar('E');
+	c='E';
       else
-	term_putchar('e');
+	c='e';
       break;
     case 0x21:
       if(modkeystatus.shiftdown)
-	term_putchar('F');
+	c='F';
       else
-	term_putchar('f');
+	c='f';
       break;
     case 0x22:
       if(modkeystatus.shiftdown)
-	term_putchar('G');
+	c='G';
       else
-	term_putchar('g');
+	c='g';
       break;
     case 0x23:
       if(modkeystatus.shiftdown)
-	term_putchar('H');
+	c='H';
       else
-	term_putchar('h');
+	c='h';
       break;
     case 0x17:
       if(modkeystatus.shiftdown)
-	term_putchar('I');
+	c='I';
       else
-	term_putchar('i');
+	c='i';
       break;
     case 0x24:
       if(modkeystatus.shiftdown)
-	term_putchar('J');
+	c='J';
       else
-	term_putchar('j');
+	c='j';
       break;
     case 0x25:
       if(modkeystatus.shiftdown)
-	term_putchar('K');
+	c='K';
       else
-	term_putchar('k');
+	c='k';
       break;
     case 0x26:
       if(modkeystatus.shiftdown)
-	term_putchar('L');
+	c='L';
       else
-	term_putchar('l');
+	c='l';
       break;
     case 0x32:
       if(modkeystatus.shiftdown)
-	term_putchar('M');
+	c='M';
       else
-	term_putchar('m');
+	c='m';
       break;
     case 0x31:
       if(modkeystatus.shiftdown)
-	term_putchar('N');
+	c='N';
       else
-	term_putchar('n');
+	c='n';
       break;
     case 0x18:
       if(modkeystatus.shiftdown)
-	term_putchar('O');
+	c='O';
       else
-	term_putchar('o');
+	c='o';
       break;
     case 0x19:
       if(modkeystatus.shiftdown)
-	term_putchar('P');
+	c='P';
       else
-	term_putchar('p');
+	c='p';
       break;
     case 0x10:
       if(modkeystatus.shiftdown)
-	term_putchar('Q');
+	c='Q';
       else
-	term_putchar('q');
+	c='q';
       break;
     case 0x13:
       if(modkeystatus.shiftdown)
-	term_putchar('R');
+	c='R';
       else
-	term_putchar('r');
+	c='r';
       break;
     case 0x1F:
       if(modkeystatus.shiftdown)
-	term_putchar('S');
+	c='S';
       else
-	term_putchar('s');
+	c='s';
       break;
     case 0x14:
       if(modkeystatus.shiftdown)
-	term_putchar('T');
+	c='T';
       else
-	term_putchar('t');
+	c='t';
       break;
     case 0x16:
       if(modkeystatus.shiftdown)
-	term_putchar('U');
+	c='U';
       else
-	term_putchar('u');
+	c='u';
       break;
-    case 0x2f:
+    case 0x2F:
       if(modkeystatus.shiftdown)
-	term_putchar('V');
+	c='V';
       else
-	term_putchar('v');
+	c='v';
       break;
     case 0x11:
       if(modkeystatus.shiftdown)
-	term_putchar('W');
+	c='W';
       else
-	term_putchar('w');
+	c='w';
       break;
     case 0x2D:
       if(modkeystatus.shiftdown)
-	term_putchar('X');
+	c='X';
       else
-	term_putchar('x');
+	c='x';
       break;
     case 0x15:
       if(modkeystatus.shiftdown)
-	term_putchar('Y');
+	c='Y';
       else
-	term_putchar('y');
+	c='y';
       break;
     case 0x2C:
       if(modkeystatus.shiftdown)
-	term_putchar('Z');
+	c='Z';
       else
-	term_putchar('z');
+	c='z';
       break;
     default:
+      c=0;
       break;
     }
+  if(c!=0)
+    {
+      term_putchar(c);
+      return;
+    }
 }
+byte ledstatus=0;
 const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'};
 static void ps2_process_key(byte scancode)
 {
@@ -226,29 +236,102 @@ static void ps2_process_key(byte scancode)
       return;
     case 0x39:
       term_putchar(' ');
+      return;
     case 0x53:
       if(modkeystatus.metadown && modkeystatus.ctrldown)
 	{
 	  // reboot, or print message
 	  term_puts("CTRL-ALT-DELETE recieved!\n");
-	  // divide by zero to reset
-	  int i=0;
-	  int j=32;
-	  int crash=j/i;
-	}
+	  panic("CTRL-ALT-DELETE recieved");
+ 	}
+    case 0x1A:
+      if(modkeystatus.shiftdown)
+	term_putchar('{');
+      else
+	term_putchar('[');
+      return;
+    case 0x1B:
+      if(modkeystatus.shiftdown)
+	term_putchar('}');
+      else
+	term_putchar(']');
+      return;
+    case 0x27:
+      if(modkeystatus.shiftdown)
+	term_putchar(':');
+      else
+	term_putchar(';');
+      return;
+    case 0x28:
+      if(modkeystatus.shiftdown)
+	term_putchar('"');
+      else
+	term_putchar('\'');
+      return;
+    case 0x29:
+      if(modkeystatus.shiftdown)
+	term_putchar('~');
+      else
+	term_putchar('`');
+      return;
+    case 0x2B:
+      if(modkeystatus.shiftdown)
+	term_putchar('|');
+      else
+	term_putchar('\\');
+      return;
+    case 0x33:
+      if(modkeystatus.shiftdown)
+	term_putchar('<');
+      else
+	term_putchar(',');
+      return;
+    case 0x34:
+      if(modkeystatus.shiftdown)
+	term_putchar('>');
+      else
+	term_putchar('.');
+      return;
+    case 0x35:
+      if(modkeystatus.shiftdown)
+	term_putchar('?');
+      else
+	term_putchar('/');
+      return;
+    case 0x0C:
+      if(modkeystatus.shiftdown)
+	term_putchar('_');
+      else
+	term_putchar('-');
+      return;
+    case 0x0D:
+      if(modkeystatus.shiftdown)
+	term_putchar('+');
+      else
+	term_putchar('=');
+      return;
+    case 0x0F:
+      // tab
+      term_puts("        ");
+      return;
     }
   if(scancode >=2 && scancode <=11) // number
     {
-      // 2 : 1
-      // 3 : 2
-      // 10: 9
-      // 11 : 0
       if(modkeystatus.shiftdown)
 	term_putchar(number_shift_lookup[scancode-2]);
       else
 	term_putchar(scancode!=11?dtoc(scancode-1):'0');
       return;
     }
+  term_puts("Unhandled scancode: ");
+  term_putn_hex(scancode);
+  term_putchar('\n');
+}
+void set_leds(int num, int caps, int scroll)
+{
+  ledstatus=scroll | (num << 1) | (caps << 2);
+  outb(0x60, 0xED);
+  outb(0x60, ledstatus);
 }
 void ps2_interrupt(registers_t regs)
 {
@@ -259,5 +342,6 @@ void init_ps2()
   memset(&modkeystatus, 0, sizeof(modkeystatus)); 
   register_handler(33, &ps2_interrupt);
   outb(0x60, 0xF0);
-  outb(0x60, 1); // scan code set 1 
+  outb(0x60, 1); // scan code set 1
+  set_leds(1, 1, 1);
 }
