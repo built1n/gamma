@@ -4,8 +4,8 @@
 static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
 static size_t term_row, term_column;
 static uint8_t term_color;
-static uint16_t* term_buffer;
-int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over
+static uint16_t* term_buffer=(uint16_t*)0xB8000; // VGA screen buffer address
+int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over, one for each line
 static uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg <<4;
@@ -53,7 +53,7 @@ void init_terminal(void)
   term_row=0;
   term_column=0;
   term_color=make_color(COLOR_WHITE, COLOR_BLACK);
-  term_buffer=(uint16_t*)0xB8000;
+  term_buffer=(uint16_t*)0xB8000; // frame buffer location, provided by BIOS
   term_clear();
   term_move_cursor(0);
 }

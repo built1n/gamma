@@ -5,11 +5,11 @@ page_dir_t* current_directory;
 void switch_page_directory(page_dir_t* page_dir)
 {
   current_directory=page_dir;
-  asm volatile("mov %0, %%cr3": : "r"(&page_dir->page_tables_phys));
+  asm volatile("mov %0, %%cr3": : "r"(&page_dir->page_tables_phys)); // move address of page_dir to register cr3
   uint32_t cr0=0; // shut up GCC
-  asm volatile("mov %%cr0, %0": "=r"(cr0));
+  asm volatile("mov %%cr0, %0": "=r"(cr0)); // move reg. cr0 to variable cr0
   cr0 |=0x80000000;
-  asm volatile("mov %0, %%cr0": :"r"(cr0));
+  asm volatile("mov %0, %%cr0": :"r"(cr0)); // move var cr0 to reg. cr0
 }
 page_t *get_page(uint32_t addr, int make, page_dir_t* dir)
 {
@@ -33,7 +33,7 @@ page_t *get_page(uint32_t addr, int make, page_dir_t* dir)
 void page_fault(registers_t regs)
 {
   uint32_t faulting_addr;
-  asm volatile("mov %%cr2, %0" : "=r" (faulting_addr));
+  asm volatile("mov %%cr2, %0" : "=r" (faulting_addr)); // get the faulting address from register cr2
   int present= !(regs.error_code & 1);
   int rw=(regs.error_code & 2);
   int us=(regs.error_code & 4);

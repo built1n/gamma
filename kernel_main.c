@@ -33,11 +33,12 @@ extern "C"
 int kernel_main(struct multiboot *mboot_ptr) // kernel entry point
 {
   early_init();
-  term_puts("booting...\n");
+  term_puts("Booting...\n");
   init();
   asm volatile("sti"); // enable interrupts
-  term_puts("system initialized.\n");
+  term_puts("System initialized.\n");
+  term_puts("(Try to) backspace over me!");
  sys_run:
   goto sys_run; // let the system run
-  return 0xBADC0DE; // we should never get here
+  return 0xDEADBEEF; // we should never get here
 }
