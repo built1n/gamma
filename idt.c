@@ -66,7 +66,7 @@ void init_idt()
 void init_desc_tables()
 {
   term_puts("initializing gdt...");
-  init_gdt();
+  init_gdt(); // bug!!!
   term_puts("idt...\n");
   init_idt();
   term_puts("done");

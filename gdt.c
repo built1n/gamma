@@ -27,5 +27,5 @@ void init_gdt()
   gdt_set_gate(4,0,0xFFFFFFFF, 0xF2, 0xCF);
   term_puts("preparing to flush gdt...");
   for(int i=0;i<1000000;++i); // sleep
-  gdt_flush((uint32_t)&gdt_pointer);
+  gdt_flush((uint32_t)&gdt_pointer); // bug!!!
 }

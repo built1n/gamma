@@ -10,9 +10,7 @@ int kernel_main(struct multiboot *mboot_ptr)
 {
   init_terminal();
   term_puts("terminal initialized.\n");
-  term_puts("will initialize gdt, idt...");
-  for(int i=0;i<10000000;++i);
-  init_desc_tables();
+  init_desc_tables(); // buggy!
   term_puts("kernel booting...\n");
   return 0xDEADBEEF;
 }
