@@ -259,10 +259,11 @@ static void ps2_process_key(byte scancode) // top level QWERTY PS/2 decoder
     case 0x53: // delete down
       if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
 	{
-	  // reboot, or do debugging stuff
-	  term_puts("CTRL-ALT-DELETE recieved!\n");
-	  panic("user-generated interrupt");
- 	}
+	  // meant to be a debug aid
+	  term_clear();
+	  return;
+	}
+      return;
     case 0x1A: // left bracket
       if(modkeystatus.shiftdown)
 	term_put_keyboard_char('{');
@@ -351,17 +352,20 @@ void ps2_interrupt(registers_t regs)
 }
 void init_ps2()
 {
-  outb(0x60, 0xEE); // send echo command
-  if(inb(0x60)==0xEE) // check for echo response: do we have a PS/2 keyboard?
-    {
-      memset(&modkeystatus, 0, sizeof(modkeystatus));
-      register_handler(33, &ps2_interrupt);
-      outb(0x60, 0xF0); 
-      outb(0x60, 1); // set to scan code set 1
-      set_leds(1, 1, 1); // flash the leds
-      set_leds(0, 0, 0);
-      term_puts("PS/2 keyboard initialized.\n");
-    }
-  else
-    term_puts("No PS/2 keyboard found!\n");
+  outb(0x64, 0xEE); // send echo command
+  byte response=inb(0x60);
+  term_puts("PS/2 echo response: ");
+  term_putn_hex(response);
+  term_putchar('\n');
+  if(response!=0xEE) // check for echo response: do we have a PS/2 keyboard?
+    term_puts("No PS/2 keyboard found (will still try)!\n");
+  
+  memset(&modkeystatus, 0, sizeof(modkeystatus));
+  register_handler(33, &ps2_interrupt);
+  outb(0x60, 0xF0); 
+  outb(0x60, 1); // set to scan code set 1
+  set_leds(1, 1, 1); // flash the leds
+  set_leds(0, 0, 0);
+  term_puts("PS/2 keyboard initialized.\n");
+  
 }
