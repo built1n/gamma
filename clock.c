@@ -1,9 +1,10 @@
 #include "gamma.h"
 #include <stdint.h>
-uint64_t tick;
+uint64_t tick; // hundredths of a second
 void clock_tick(registers_t regs)
 {
-  term_puts("Clock tick...\n");
+  term_puts("Clock tick number: ");
+  term_putn_dec(tick);
   ++tick;
 }
 void init_clock(uint32_t frequency)
@@ -15,4 +16,8 @@ void init_clock(uint32_t frequency)
   byte low=(byte)(divisor & 0xFF), high=(byte)( (divisor >> 8) & 0xFF);
   outb(0x40, low);
   outb(0x40, high);
+}
+uint64_t ms_time(void)
+{
+  return tick * 10; 
 }
