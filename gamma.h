@@ -5,3 +5,4 @@
 #include "term.h"
 #include "util.h"
 #include "panic.h"
+#include "clock.h"
