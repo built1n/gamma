@@ -12,7 +12,7 @@ static uint8_t make_color(enum vga_color fg, enum vga_color bg)
 static uint16_t make_vgaentry(char c, uint8_t col)
 {
   uint16_t c16=c;
-  uint16_t color16=col;
+  uint16_t color16=col;      
   return c16 | color16 << 8;
 }
 void term_clear(void)
@@ -25,6 +25,8 @@ void term_clear(void)
 	  term_buffer[idx]=make_vgaentry(' ', term_color);
 	}
     }
+  term_row=0;
+  term_column=0;
 }
 static void term_move_cursor(uint16_t cursor_idx)
 {
@@ -103,16 +105,13 @@ void term_putchar(char c)
     }
   else if(c=='\b')
     {
-      if(--term_column>=0) // this will not go past newlines
+      int32_t term_column_32=term_column;
+      if(term_column_32-1>=0) // this will not go past newlines
 	{
-	  term_buffer[term_row * VGA_WIDTH+term_column]=make_vgaentry(' ', term_color);
-	  update_bios_cursor();
-	} 
-      else
-	{
-	  ++term_column;
-	  update_bios_cursor();
+	  --term_column;
+	  term_putentry(' ', term_color, term_column, term_row);
 	}
+      update_bios_cursor();
     }
   else // do not increase the column in case of a newline or backspace
     {
