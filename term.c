@@ -1,6 +1,4 @@
-#include "term.h"
-#include "util.h"
-#include "string.h"
+#include "gamma.h"
 #include <stdint.h>
 #include <stddef.h>
 static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
@@ -131,16 +129,77 @@ void term_puts(const char* str)
 void term_putn_dec(int number)
 {
   int firstDigit=1000000000;
+  if(number<0)
+    term_putchar('-');
   while(number/firstDigit==0 && firstDigit>0)firstDigit/=10;
   if(firstDigit!=0)
     {
-  while(firstDigit>0)
-    {
-      term_putchar(dtoc((uint8_t)number/firstDigit));
-      number%=firstDigit;
-      firstDigit/=10;
-    }
+      while(firstDigit>0)
+	{
+	  term_putchar(dtoc((uint8_t)number/firstDigit));
+	  number%=firstDigit;
+	  firstDigit/=10;
+	}
     }
   else
     term_putchar('0');
+}
+void term_putn_bin(int number)
+{
+  int mask=1;
+  for(int i=0;i<31;++i)
+    {
+      if((number & mask)==0)
+	{
+	  term_putchar('0');
+	}
+      else
+	{
+	  term_putchar('1');
+	}
+      mask<<=1;
+    }
+}
+void put_hex_char(unsigned char n)
+{
+  if(n<=9)
+    term_putchar(dtoc(n));
+  else
+    {
+      char c;
+      switch(n)
+	{
+	case 10:
+	  c='A';
+	  break;
+	case 11:
+	  c='B';
+	  break;
+	case 12:
+	  c='C';
+	  break;
+	case 13:
+	  c='D';
+	  break;
+	case 14:
+	  c='E';
+	  break;
+	case 15:
+	  c='F';
+	  break;
+	default:
+	  c='?';
+	}
+      term_putchar(c);
+    }
+}
+void term_putn_hex(int number)
+{
+  term_puts("0x");
+  int mask=0xFF;
+  for(int i=0;i<4;++i)
+    {
+      put_hex_char(number & mask);
+      mask <<=4;
+    }
 }

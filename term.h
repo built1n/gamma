@@ -24,6 +24,8 @@ void init_terminal(void);
 void term_setcolor(uint8_t color); // set color of text TO BE printed
 void term_putchar(char);
 void term_puts(const char*);
+void term_putn_hex(int);
 void term_putn_dec(int);
+void term_putn_bin(int);
 void term_clear(void);
 void term_reset();
