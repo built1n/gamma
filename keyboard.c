@@ -11,47 +11,8 @@ struct {
   int escdown  : 1; // done
   int recievede0:1; // did we just get 0xE0?
 } modkeystatus;
-static void ps2_process_key(byte scancode)
+static void ps2_qwerty_autogen(byte scancode)
 {
-  switch(scancode) // handle modifier keys
-    {
-    case 0x01: // esc.
-      modkeystatus.escdown=1;
-      return;
-    case 0x81: // esc. up
-      modkeystatus.escdown=0;
-      return;
-    case 0x2A: case 0x36:
-      modkeystatus.shiftdown=1;
-      break;
-    case 0xAA: case 0xB6:
-      modkeystatus.shiftdown=0;
-      return;
-    case 0x1D: // left ctrl.
-      if(modkeystatus.recievede0) // right ctrl.
-	modkeystatus.recievede0=0;
-      modkeystatus.ctrldown=1;
-      return;
-    case 0x9D: // ctrl up
-      if(modkeystatus.recievede0)
-	modkeystatus.recievede0=0;
-      modkeystatus.ctrldown=0;
-      return;
-    case 0x38: // left alt
-      if(modkeystatus.recievede0)
-	modkeystatus.recievede0=0;
-      modkeystatus.metadown=1;
-      return;
-    case 0xB8: // alt up
-      if(modkeystatus.recievede0)
-	modkeystatus.recievede0=0;
-      modkeystatus.metadown=0;
-      return;
-    case 0xE0:
-      modkeystatus.recievede0=1;
-      return;
-    }
-  // not a modifier
   switch(scancode)
     {
     case 0x1E:
@@ -214,11 +175,70 @@ static void ps2_process_key(byte scancode)
       break;
     }
 }
+const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'};
+static void ps2_process_key(byte scancode)
+{
+  switch(scancode) // handle modifier keys
+    {
+    case 0x01: // esc.
+      modkeystatus.escdown=1;
+      return;
+    case 0x81: // esc. up
+      modkeystatus.escdown=0;
+      return;
+    case 0x2A: case 0x36:
+      modkeystatus.shiftdown=1;
+      break;
+    case 0xAA: case 0xB6:
+      modkeystatus.shiftdown=0;
+      return;
+    case 0x1D: // left ctrl.
+      if(modkeystatus.recievede0) // right ctrl.
+	modkeystatus.recievede0=0;
+      modkeystatus.ctrldown=1;
+      return;
+    case 0x9D: // ctrl up
+      if(modkeystatus.recievede0)
+	modkeystatus.recievede0=0;
+      modkeystatus.ctrldown=0;
+      return;
+    case 0x38: // left alt
+      if(modkeystatus.recievede0)
+	modkeystatus.recievede0=0;
+      modkeystatus.metadown=1;
+      return;
+    case 0xB8: // alt up
+      if(modkeystatus.recievede0)
+	modkeystatus.recievede0=0;
+      modkeystatus.metadown=0;
+      return;
+    case 0xE0:
+      modkeystatus.recievede0=1;
+      return;
+    }
+  // not a modifier
+  ps2_qwerty_autogen(scancode);
+  if(scancode >=2 && scancode <=10) // number
+    {
+      if(modkeystatus.shiftdown)
+	term_putchar(number_shift_lookup[scancode-1]);
+      else
+	term_putchar(dtoc(scancode-1));
+      return;
+    }
+  switch(scancode)
+    {
+    case 0x1C:
+      term_putchar('\n');
+      return;
+    case 0x0E:
+      term_putchar('\b');
+      return;
+    }
+}
 void ps2_interrupt(registers_t regs)
 {
-  byte key=inb(0x60);
-  term_debug("Keypress detected");
-  ps2_process_key(key);
+  ps2_process_key(inb(0x60));
 }
 void init_ps2()
 {
