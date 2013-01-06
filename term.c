@@ -1,4 +1,5 @@
 #include "term.h"
+#include "util.h"
 #include "string.h"
 #include <stdint.h>
 #include <stddef.h>
@@ -27,6 +28,7 @@ void init_terminal()
 	  term_buffer[idx]=make_vgaentry(' ', term_color);
 	}
     }
+  term_puts("terminal initialized\n");
 }
 void term_scroll() // scroll the terminal 1 line
 {
@@ -56,8 +58,15 @@ void term_putentry(char c, uint8_t color, size_t x, size_t y)
   const size_t idx=y*VGA_WIDTH+x;
   term_buffer[idx]=make_vgaentry(c, color);
 }
-void term_putchar(char c)
+void term_move_cursor(uint16_t cursor_idx)
 {
+  outb(0x3D4, 14);
+  outb(0x3D5, cursor_idx >> 8); // high byte
+  outb(0x3D4, 15);
+  outb(0x3D5, cursor_idx); // low byte
+}
+void term_putchar(char c)
+{ 
   if(c=='\n')
     {
       term_column=0;
@@ -66,16 +75,27 @@ void term_putchar(char c)
 	  term_scroll();
 	}
     }
-  else
-    term_putentry(c, term_color, term_column, term_row);
-  if(++term_column==VGA_WIDTH)
+  else // do not increase the column in case of a newline
     {
-      term_column=0;
-      if(++term_row==VGA_HEIGHT)
+      term_putentry(c, term_color, term_column, term_row);
+      if(++term_column==VGA_WIDTH)
 	{
-	  term_scroll();
+	  term_column=0;
+	  if(++term_row==VGA_HEIGHT)
+	    {
+	      term_scroll();
+	    }
 	}
     }
+  // now move the cursor
+  size_t cursor_x=term_column, cursor_y=term_row;
+  if(cursor_x==VGA_WIDTH)
+    {
+      cursor_x=0;
+      ++cursor_y;
+    }
+  uint16_t cursor_idx=cursor_y * VGA_WIDTH + cursor_x;
+  term_move_cursor(cursor_idx);
 }
 void term_puts(const char* str)
 {
@@ -85,7 +105,7 @@ void term_puts(const char* str)
       term_putchar(str[i]);
     }
 }
-void term_putn(int number)
+void term_putn_dec(int number)
 {
   int firstDigit=10; // size_t for 64-bit numbers
   while(number%firstDigit==0 && firstDigit>0)
