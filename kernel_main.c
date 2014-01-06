@@ -8,7 +8,7 @@ extern "C"
 int kernel_main(struct multiboot *mboot_ptr)
 {
   init_terminal();
-  term_puts("You should only see this text. Not this.");
-  term_puts("\b\b\b\b\b\b\b\b\b\b\b");
+  for(;;)
+    term_puts("LLLLLLLLLLLL\nO\nLLLLLLLLLLLLL");
   return 0xDEADBEEF;
 }

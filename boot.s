@@ -1,4 +1,4 @@
-	.set ALIGN,	 1<<0 	# Multiboot stuff...
+	.set ALIGN,	 1<<0 	# Multiboot stuff
 	.set MEMINFO,	 1<<1
 	.set FLAGS,	 ALIGN | MEMINFO
 	.set MAGIC,	 0x1BADB002
@@ -15,8 +15,8 @@ stack_top:
 	.section .text
 	.global _start
 	.type _start, @function
-_start:				# Execution begins here
-	movl %esp, stack_top	# Init the stack
+_start:
+	movl %esp, stack_top	# Initialize the stack
 	push %ebp		# Add ebp to the arguments of kernel_main
 	call kernel_main	# Start the kernel
 	cli			# Clear interrupts
