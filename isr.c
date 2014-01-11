@@ -28,12 +28,13 @@ void isr_handler(struct registers_t regs) // high-level handler for interrupts
   if(handlers[regs.interrupt_number]==0)
     { 
       term_puts("unhandled interrupt!\n");
-      term_puts("interrupt number in hex: ");
-      term_putn_hex(regs.interrupt_number);
+      term_puts("interrupt number in decimal: ");
+      term_putn_dec(regs.interrupt_number);
       term_putchar('\n');
-      term_puts("error code in hex: ");
-      term_putn_hex(regs.error_code);
+      term_puts("error code in decimal: ");
+      term_putn_dec(regs.error_code);
       term_putchar('\n');
+      panic("Unhandled interrupt");
     }
   else
     handlers[regs.interrupt_number](regs.error_code);
