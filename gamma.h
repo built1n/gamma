@@ -4,3 +4,4 @@
 #include "string.h"
 #include "term.h"
 #include "util.h"
+#include "panic.h"
