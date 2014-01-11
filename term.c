@@ -144,10 +144,10 @@ void term_putn_dec(int number)
   else
     term_putchar('0');
 }
-void term_putn_bin(int number)
+void term_putn_bin(unsigned int number)
 {
-  int mask=1;
-  for(int i=0;i<31;++i)
+  int mask=0x80000000;
+  while(mask!=0)
     {
       if((number & mask)==0)
 	{
@@ -157,7 +157,7 @@ void term_putn_bin(int number)
 	{
 	  term_putchar('1');
 	}
-      mask<<=1;
+      mask>>=1;
     }
 }
 void put_hex_char(unsigned char n)
@@ -193,10 +193,10 @@ void put_hex_char(unsigned char n)
       term_putchar(c);
     }
 }
-void term_putn_hex(int number)
+void term_putn_hex(unsigned int number)
 {
   term_puts("0x");
-  int mask=0xF000000;
+  int mask=0xF0000000;
   for(int i=0;i<8;++i)
     {
       put_hex_char(number & mask);
