@@ -1,3 +1,4 @@
+/* Tell the linker how to combine the object files */
 ENTRY(_start)
 SECTIONS
 {
