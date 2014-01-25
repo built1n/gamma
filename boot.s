@@ -30,3 +30,5 @@ _start:				# This is where execution begins
 .LKernel_hang:			# Idle forever
 	jmp .LKernel_hang
 	.size _start, . - _start
+
+

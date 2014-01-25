@@ -21,3 +21,5 @@ idt_flush:
 	lidt (%eax) # load the IDT
 	sti # resume interrupts
 	ret
+
+

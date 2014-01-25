@@ -15,3 +15,5 @@ struct gdt_ptr {
 } __attribute__((packed)); // same purpose as above
 typedef struct gdt_ptr gdt_ptr;
 void init_desc_tables(void);
+
+
