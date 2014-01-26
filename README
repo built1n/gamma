@@ -16,9 +16,13 @@ e.g.: keyboards.
 Compiling on Winblows:
 [UNTESTED]
 You will need the MinGW GCC port as well as the make utility.
-You might need to change the CC variable in the Makefile to your compiler
+Edit the Makefile so that the 
+CC=gcc
+line read
+CC=mingw32-gcc
+This will change to the MinGW GCC.
 Change directory (at a command prompt) to the source directory
-Run 'make'
+Run 'mingw32-make'
 This will generate a Multiboot-compatible boot image, called bootImage.bin
 Running:
 You will need the GRUB bootloader installed
