@@ -1,3 +1,15 @@
+/* +==============================================+
+   |                                              |
+   |  /====\   /=\   +=\   /=+  +=\   /=+   /=\   |
+   |  | +==/  //^\\  |  \ /  |  |  \ /  |  //^\\  |
+   |  | |+=+  ||_||  |   V   |  |   V   |  ||_||  |
+   |  | || |  ||-||  | |\ /| |  | |\ /| |  ||-||  |
+   |  | ++ |  || ||  | || || |  | || || |  || ||  | 
+   |  \====/  ++ ++  +=++=++=+  +=++=++=+  ++ ++  |
+   |                                              |
+   +==============================================+
+*/
+#define CLOCK_FREQ 1193180 // this is the same for all Intel CPUs
 #include "gamma.h"
 #include <stdint.h>
 uint64_t tick; // hundredths of a second
@@ -8,7 +20,7 @@ void clock_tick(registers_t regs)
 void init_clock(uint32_t frequency)
 {
   tick=0;
-  uint32_t divisor=1193180/frequency;
+  uint32_t divisor=CLOCK_FREQ/frequency;
   byte low=(byte)(divisor & 0xFF), high=(byte)( (divisor >> 8) & 0xFF);
   register_handler(32, &clock_tick);
   outb(0x43, 0x36);
