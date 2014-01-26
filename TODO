@@ -10,11 +10,11 @@
 +==============================================+
 What can I do (not neccessarily in order)?
 This file answers that.
-Write a PS/2 driver [Medium sized check mark here]
-Get memory allocation working [Big red X]
-Write design document
-Get the clock working. [Big green check mark here]
-Get some multitasking working
-Write/port a shell.
-Printf function [CIRCLED IN RED INK] <=================DO THIS!!!
+Memory allocation (paging, segmentation)
+Write design doc.
+Preemptive multitasking
+Keyboard input (getting a string, not just a driver)
+USB keyboard support
+FS support
+C library
 Write documentation
