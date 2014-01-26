@@ -17,3 +17,5 @@ Type: "multiboot (hd0, msdosX)/path_to_source_dir/bootImage.bin", where X is the
 This will load the kernel
 Then type "boot", and the kernel will load
 
+
+

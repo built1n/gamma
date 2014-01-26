@@ -17,3 +17,5 @@ typedef struct gdt_ptr gdt_ptr;
 void init_desc_tables(void);
 
 
+
+

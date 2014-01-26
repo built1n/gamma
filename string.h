@@ -6,3 +6,5 @@ void memset(void* ptr, unsigned char value, size_t n);
 int strcmp(char*, char*);
 
 
+
+
