@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <stddef.h>
-enum vga_color
+typedef enum vga_color
   {
     COLOR_BLACK=   0 ,
     COLOR_BLUE=    1 ,
@@ -19,7 +19,8 @@ enum vga_color
     COLOR_LMAGENTA=13,
     COLOR_LBROWN=  14,
     COLOR_WHITE=   15
-  };
+  } vga_color;
+uint8_t make_color(vga_color fg, vga_color bg);
 void init_terminal(void);
 void term_setcolor(uint8_t color); // set color of text TO BE printed
 uint8_t term_getcolor(void);

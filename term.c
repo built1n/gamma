@@ -7,9 +7,9 @@ static size_t term_row, term_column;
 static uint8_t term_color;
 static uint16_t* term_buffer=(uint16_t*)0xB8000; // VGA screen buffer address
 int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over, one for each line
-static uint8_t make_color(enum vga_color fg, enum vga_color bg)
+uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
-  return fg | bg <<4;
+  return fg | bg << 4;
 }
 static uint16_t make_vgaentry(char c, uint8_t col)
 {
