@@ -46,14 +46,17 @@ void page_fault(registers_t regs)
 }
 void init_paging(void)
 {
+  term_puts("Initializing paging...\n");
   uint32_t mem_end_page=0x1000000; // 16MB for now
   nFrames=mem_end_page/0x1000;
+  term_puts("Allocing frames[]\n");
   frames=(uint32_t*)kmalloc(INDEX_FROM_BIT(nFrames));
   memset(frames, 0, INDEX_FROM_BIT(nFrames));
   page_dir_t* kernel_dir=(page_dir_t*)kmalloc_a(sizeof(page_dir_t));
   memset(kernel_dir, 0, sizeof(page_dir_t));
   current_directory=kernel_dir;
   int i=0;
+  term_puts("Preparing to enter loop.\n");
   while(i<next_addr)
     {
       alloc_frame( get_page(i, 1, kernel_dir),0,0);
