@@ -1,3 +1,14 @@
+/* +==============================================+
+   |                                              |
+   |  /====\   /=\   +=\   /=+  +=\   /=+   /=\   |
+   |  | +==/  //^\\  |  \ /  |  |  \ /  |  //^\\  |
+   |  | |+=+  ||_||  |   V   |  |   V   |  ||_||  |
+   |  | || |  ||-||  | |\ /| |  | |\ /| |  ||-||  |
+   |  | ++ |  || ||  | || || |  | || || |  || ||  | 
+   |  \====/  ++ ++  +=++=++=+  +=++=++=+  ++ ++  |
+   |                                              |
+   +==============================================+
+*/
 #include <stdint.h>
 #include <stddef.h>
 #include "gamma.h"
@@ -11,7 +22,7 @@ static void idt_set_gate(uint8_t n, uint32_t base, uint16_t sel, uint8_t flags)
   idt_entries[n].zero=0;
   idt_entries[n].flags=flags; // OR flags by 0x60 to go to user mode
 } 
-extern void idt_flush(uint32_t); // ASM
+extern void idt_flush(uint32_t); // in gdt-as.s
 
 extern void init_gdt();
 static void init_idt()
@@ -19,7 +30,7 @@ static void init_idt()
   idt_pointer.limit=sizeof(struct idt_entry_type) * 256 -1;
   idt_pointer.base=(uint32_t)&idt_entries;
   memset(&idt_entries, 0, sizeof(idt_entry_type)*256);
-  // remap the IRQ table
+  // remap the IRQ table by reprogramming the PIC's
   outb(0x20, 0x11);
   outb(0xA0, 0x11);
   outb(0x21, 0x20);
@@ -30,16 +41,16 @@ static void init_idt()
   outb(0xA1, 0x01);
   outb(0x21, 0);
   outb(0xA1, 0);
-  idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
-  idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8E);
-  idt_set_gate(2, (uint32_t)isr2, 0x08, 0x8E);
-  idt_set_gate(3, (uint32_t)isr3, 0x08, 0x8E);
-  idt_set_gate(4, (uint32_t)isr4, 0x08, 0x8E);
-  idt_set_gate(5, (uint32_t)isr5, 0x08, 0x8E);
-  idt_set_gate(6, (uint32_t)isr6, 0x08, 0x8E);
-  idt_set_gate(7, (uint32_t)isr7, 0x08, 0x8E);
-  idt_set_gate(8, (uint32_t)isr8, 0x08, 0x8E);
-  idt_set_gate(9, (uint32_t)isr9, 0x08, 0x8E);
+  idt_set_gate(0,  (uint32_t)isr0, 0x08, 0x8E);
+  idt_set_gate(1,  (uint32_t)isr1, 0x08, 0x8E);
+  idt_set_gate(2,  (uint32_t)isr2, 0x08, 0x8E);
+  idt_set_gate(3,  (uint32_t)isr3, 0x08, 0x8E);
+  idt_set_gate(4,  (uint32_t)isr4, 0x08, 0x8E);
+  idt_set_gate(5,  (uint32_t)isr5, 0x08, 0x8E);
+  idt_set_gate(6,  (uint32_t)isr6, 0x08, 0x8E);
+  idt_set_gate(7,  (uint32_t)isr7, 0x08, 0x8E);
+  idt_set_gate(8,  (uint32_t)isr8, 0x08, 0x8E);
+  idt_set_gate(9,  (uint32_t)isr9, 0x08, 0x8E);
   idt_set_gate(10, (uint32_t)isr10, 0x08, 0x8E);
   idt_set_gate(11, (uint32_t)isr11, 0x08, 0x8E);
   idt_set_gate(12, (uint32_t)isr12, 0x08, 0x8E);
@@ -82,7 +93,7 @@ static void init_idt()
   set_unhandled_panic(false);
   idt_flush((uint32_t)&idt_pointer);
 }
-void init_desc_tables() // do not print anything, the terminal may not be initialized
+void init_desc_tables() // do not print anything here, the terminal may not be initialized
 {
   init_gdt();
   init_idt();
