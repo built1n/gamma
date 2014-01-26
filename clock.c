@@ -19,7 +19,3 @@ uint64_t time(void)
 {
   return tick; 
 }
-
-
-
-

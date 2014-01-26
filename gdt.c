@@ -25,7 +25,3 @@ void init_gdt()
   gdt_set_gate(4,0,0xFFFFFFFF, 0xF2, 0xCF);
   gdt_flush((uint32_t)&gdt_pointer);
 }
-
-
-
-

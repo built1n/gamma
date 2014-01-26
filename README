@@ -16,6 +16,3 @@ At the GRUB boot menu, hit 'c'
 Type: "multiboot (hd0, msdosX)/path_to_source_dir/bootImage.bin", where X is the number of your Windows partition.
 This will load the kernel
 Then type "boot", and the kernel will load
-
-
-

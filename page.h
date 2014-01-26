@@ -21,7 +21,3 @@ void switch_page_directory(page_dir_t *dir);
 page_t* get_page(uint32_t addr, int make, page_dir_t *dir);
 void page_fault(registers_t);
 
-
-
-
-

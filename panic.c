@@ -18,7 +18,3 @@ void kpanic(const char* str, const char* file, int line)
   asm volatile("hlt"); // put CPU in a non-executing state
   for(;;)idle(); // loop
 }
-
-
-
-

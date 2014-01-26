@@ -34,7 +34,3 @@ void term_reset(void); // clear, reset cursor, color
 void term_put_keyboard_char(char); // put a backspaceable char
 // wish: PRINTF, PLZ, PLZ, PLZ!!!!!!!
 int kprintf(const char* fmt, ...);
-
-
-
-

@@ -62,7 +62,3 @@ void init_paging(void)
   register_handler(14, &page_fault);
   switch_page_directory(kernel_dir);
 }
-
-
-
-

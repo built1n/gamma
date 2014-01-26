@@ -38,7 +38,3 @@ int kernel_main(struct multiboot *mboot_ptr) // kernel entry point
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
 }
-
-
-
-

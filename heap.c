@@ -32,7 +32,3 @@ uint32_t kmalloc(uint32_t sz)
 {
   return kmalloc_impl(sz, 1, 0);
 }
-
-
-
-

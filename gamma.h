@@ -15,7 +15,3 @@
 #include "frame.h"//-+
 typedef unsigned char byte;
 #endif
-
-
-
-

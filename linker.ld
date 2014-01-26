@@ -23,7 +23,3 @@ SECTIONS
 		*(.initialize_stack)
 	}
 }
-
-
-
-

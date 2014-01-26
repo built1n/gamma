@@ -42,7 +42,3 @@ unreasonable (>16M).
 13. Include the function prototypes for functions that return values, or take arguments.
 14. Provide adequate documentation of all assembly code!
 15. Try to prefix global names with the part of the kernel it is used by.
-
-
-
-
