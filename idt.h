@@ -15,7 +15,7 @@ struct idt_ptr
   uint32_t base;
 } __attribute__((packed));
 typedef struct idt_ptr idt_ptr;
-// our interrupt handlers!
+// our interrupt handlers, defined in interrupt.s!
 extern void isr0();
 extern void isr1();
 extern void isr2();
@@ -48,7 +48,7 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
-
+// hardware IRQs
 extern void irq0();
 extern void irq1();
 extern void irq2();
