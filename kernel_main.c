@@ -17,10 +17,6 @@ void dividebyzero(registers_t regs)
 {
   panic("Attempted division by zero!");
 }
-void keydown(char c)
-{
-  term_puts("key down!");
-}
 static void early_init(void) // do low-level init
 {
   init_desc_tables(); // GDT, IDT
@@ -34,7 +30,6 @@ static void early_init(void) // do low-level init
 static void init(void)
 {
   init_ps2();
-  register_keyboard_handler(&keydown);
   term_puts("PS/2 keyboard initialized.\n");
   // register interrupt handlers
   register_handler(0, &dividebyzero);
@@ -50,6 +45,11 @@ int kernel_main(struct multiboot *mboot_ptr) // kernel entry point
   init();
   asm volatile("sti"); // enable interrupts
   term_puts("System initialized.\n");
+  term_puts("Enter a string: ");
+  char str[256];
+  read(256, str);
+  term_puts("Got string: ");
+  term_puts(str);
  sys_run:
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
