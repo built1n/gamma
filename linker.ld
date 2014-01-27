@@ -1,12 +1,12 @@
 /* Tell the linker how to combine the object files */
-ENTRY(_start)
+ENTRY(_start) /* kernel enters at _start */
 SECTIONS
 {
-	. = 1M;
+	. = 1M; /* skip 1M */
 	.text BLOCK(4K) : ALIGN(4K)
 	{
-		*(.multiboot)
-		*(.text)
+		*(.multiboot) /* Multiboot header */
+		*(.text) /* executable part */
 	}
 	.rodata BLOCK(4K) : ALIGN(4K)
 	{
