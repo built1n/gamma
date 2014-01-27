@@ -18,7 +18,7 @@ stack_bottom:			# Stack grows up in addresses, so bottom is
 stack_top:
 	
 .section .text 			# The executable part
-	.global _start		# Declare _start as a function
+	.global _start		# Declare _start as a global function
 	.type _start, @function
 _start:				# This is where execution begins
 	cli			# Stop interrupts, this is a critical section
