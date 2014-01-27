@@ -31,6 +31,10 @@ void register_keyboard_handler(void(*fnPtr)(char))
 {
   kbdhandler=fnPtr;
 }
+void *get_keyboard_handler()
+{
+  return kbdhandler;
+}
 void set_leds(int num, int caps, int scroll)
 {
   ledstatus=scroll | (num << 1) | (caps << 2);
