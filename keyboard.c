@@ -374,14 +374,6 @@ void ps2_interrupt(registers_t regs)
 }
 void init_ps2()
 {
-  outb(0x64, 0xEE); // send echo command
-  byte response=inb(0x60);
-  term_puts("PS/2 echo response: ");
-  term_putn_hex(response);
-  term_putchar('\n');
-  if(response!=0xEE) // check for echo response: do we have a PS/2 keyboard?
-    term_puts("No PS/2 keyboard found (will still try)!\n");
-  
   memset(&modkeystatus, 0, sizeof(modkeystatus));
   register_handler(33, &ps2_interrupt);
   outb(0x60, 0xF0); 
@@ -389,5 +381,4 @@ void init_ps2()
   set_leds(1, 1, 1); // flash the leds
   set_leds(0, 0, 0);
   term_puts("PS/2 keyboard initialized.\n");
-  
 }
