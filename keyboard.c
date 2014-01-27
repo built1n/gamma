@@ -218,9 +218,9 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
 	{
 	  // meant to be a debug aid
 	  term_clear();
-	  return;
+	  return 127;
 	}
-      return;
+      return 127;
     case 0x1A: // left bracket
       if(modkeystatus.shiftdown)
 	c='{';
