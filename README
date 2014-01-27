@@ -8,6 +8,8 @@
 |  \====/  ++ ++  +=++=++=+  +=++=++=+  ++ ++  |
 |                                              |
 +==============================================+
+NOTE: The timestamps for many of the files sometimes are 1998. This is my
+      fault - my CMOS battery is dead, and I forget to set back the clock!
 Execution begins in boot.s, and goes to kernel_main(), in kernel_main.c.
 After that, execution is interrupt-driven, so looking at the kernel_main
 function will be pointless: it's an infinite loop. The purpose of the kernel
