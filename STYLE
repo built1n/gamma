@@ -9,12 +9,12 @@
 *****************CODING=STYLE********************
 0. All C code will follow the GNU style.
 1. Function opening braces are on the line after the function declaration, and
-are not indented.
+   are not indented.
  void f()
  {
 2. Indents are 2 spaces in size.
 3. For all code blocks except function blocks, indent the braces, AND indent
-again the code;
+   again the code;
  void f()
  {
    if(asdf)
@@ -22,7 +22,7 @@ again the code;
        code;
      }
  }
-4. Braces are optional for single-statement blocks. Both of these are acceptable:
+4. Braces are optional for single-statement blocks. Both of these are acceptabl	e:
  if(adsf)
    statement;
  if(asdf)
@@ -36,17 +36,19 @@ again the code;
  ===NOT===
  void f(arg1, arg2)int arg1, int arg2
 
-7. Use the smallest integer possible for the job! If you only need to count to
+7. Use the smallest integer possible for the job! For example,if you only need 
+   to count to
 100, use an 8-bit integer.
 8. Try to avoid using "magic numbers". If you do, document what they do.
 9. Avoid overusing macros.
-10. When it comes to speed vs. size, speed wins, unless the size is
-unreasonable (>16M).
+10. Avoid unreasonably long lines (>100 chars)
 11. Always initialize pointers.
 12. All assembly code will use the AT&T assembler syntax:
     - The mov family of instructions are: "mov source, dest"
     - Register names are prefixed with a %
     - Constants are prefixed with a $
-13. Include the function prototypes for functions that return values, or take arguments.
+    - When using an instruction with a constant, append a 'b', 'd' or 'l' 
+      depending on the desired size
+13. Include the function prototypes for all assembly functions that return'	values or take arguments.
 14. Provide adequate documentation of all assembly code!
-15. Try to prefix global names with the part of the kernel it is used by.
+15. Try to prefix global names with the part of the kernel it is used in.
