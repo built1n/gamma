@@ -14,6 +14,7 @@
 #include "heap.h" // += Virtual memory
 #include "frame.h"//-+
 #include "io.h"
+#include "power.h"
 const char* build_time;
 const char* build_date;
 typedef unsigned char byte;
