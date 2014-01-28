@@ -24,7 +24,8 @@ struct idt_ptr
   uint32_t base;
 } __attribute__((packed));
 typedef struct idt_ptr idt_ptr;
-// our interrupt handlers, defined in interrupt.s!
+void clear_idt(void); // clear the IDT, usually to generate a triple-fault 
+// our interrupt handlers, defined in interrupt.s
 extern void isr0();
 extern void isr1();
 extern void isr2();
