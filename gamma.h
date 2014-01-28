@@ -6,13 +6,15 @@
 #include "isr.h" // Interrupt handlers
 #include "string.h" // strcmp, strlen, etc.
 #include "term.h" // terminal functions
-#include "util.h" // port i/o
+#include "util.h" // port i/o, call trace
 #include "panic.h" // the panic function
-#include "clock.h"
-#include "keyboard.h" // DUH?
+#include "clock.h" // extremely complex!
+#include "keyboard.h" // PS/2 only
 #include "page.h" //-+ 
-#include "heap.h" // +=Memory allocation
+#include "heap.h" // += Virtual memory
 #include "frame.h"//-+
 #include "io.h"
+const char* build_time;
+const char* build_date;
 typedef unsigned char byte;
 #endif
