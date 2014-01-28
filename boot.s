@@ -11,7 +11,7 @@ multiboot_header:
 	.long FLAGS
 	.long CHECKSUM		# Prove that we are multiboot
 	
-.section .initialize_stack
+.section .stack
 stack_bottom:			# Stack grows up in addresses, so bottom is
 				# lower than the top
 	.skip 32768		# 32KB stack

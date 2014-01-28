@@ -30,6 +30,6 @@ SECTIONS
 	{
 		*(COMMON)
 		*(.bss)
-		*(.initialize_stack)
+		*(.stack)
 	}
 }
