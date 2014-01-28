@@ -98,3 +98,7 @@ void init_desc_tables() // do not print anything here, the terminal may not be i
   init_idt();
   init_isr();
 }
+void clear_idt(void) // load a null IDT, try to get a triple-fault
+{
+  idt_flush(0);
+}
