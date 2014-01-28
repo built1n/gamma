@@ -4,7 +4,6 @@ static int idx=0, maxchars;
 static volatile int readdone=0;
 void on_keypress(char c)
 {
-  call_trace(32);
   if(c!='\n' && c!='\b' && c!=127)
     {
       if(idx<maxchars)
@@ -30,6 +29,10 @@ void on_keypress(char c)
 	}
     }
 }
+static void idle()
+{
+  return;
+}
 int read(int n, char* buf)
 {
   term_puts("Entering read function.\n");
@@ -41,7 +44,8 @@ int read(int n, char* buf)
   term_puts("Registering new keyboard handler.\n");
   register_keyboard_handler(&on_keypress);
   term_puts("Looping...\n");
-  while(!readdone);
+  while(readdone==0)
+    idle();
   term_puts("Done!\n");
   register_keyboard_handler(old_handler);
   return idx;
