@@ -35,28 +35,27 @@ static void init(void)
   register_handler(0, &dividebyzero);
   set_unhandled_panic(true); // we've already registered all the handlers
 }
-#ifdef __cplusplus
-extern "C"
-#endif
-int kernel_main(void *mboot_ptr) // kernel entry point
+static void start_kernel(void)
 {
   early_init();
   term_puts("Booting...\n");
   init();
   asm volatile("sti"); // enable interrupts
-  #ifndef NDEBUG
+#ifndef NDEBUG
   term_puts("Build date: ");
   term_puts(build_time);
   term_puts(", ");
   term_puts(build_date);
   term_putchar('\n');
-  #endif
+#endif
   term_puts("System initialized.\n");
-  term_puts("Enter a string: ");
-  char str[256];
-  read(256, str);
-  term_puts("Got string: ");
-  term_puts(str);
+}
+#ifdef __cplusplus
+extern "C"
+#endif
+int kernel_main(void *mboot_ptr) // kernel entry point
+{
+  start_kernel();
  sys_run:
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
