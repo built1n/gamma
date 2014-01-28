@@ -382,5 +382,4 @@ void init_ps2()
   outb(0x60, 1); // set to scan code set 1
   set_leds(1, 1, 1); // flash the leds
   set_leds(0, 0, 0);
-  term_puts("PS/2 keyboard initialized.\n");
 }
