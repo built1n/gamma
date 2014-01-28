@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "gamma.h"
+const char* build_time=__TIME__;
+const char* build_date=__DATE__;
 void dividebyzero(registers_t regs)
 {
   panic("Attempted division by zero!");
@@ -36,12 +38,19 @@ static void init(void)
 #ifdef __cplusplus
 extern "C"
 #endif
-int kernel_main(struct multiboot *mboot_ptr) // kernel entry point
+int kernel_main(void *mboot_ptr) // kernel entry point
 {
   early_init();
   term_puts("Booting...\n");
   init();
   asm volatile("sti"); // enable interrupts
+  #ifndef NDEBUG
+  term_puts("Build date: ");
+  term_puts(build_time);
+  term_puts(", ");
+  term_puts(build_date);
+  term_putchar('\n');
+  #endif
   term_puts("System initialized.\n");
   term_puts("Enter a string: ");
   char str[256];
