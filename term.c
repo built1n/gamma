@@ -190,16 +190,13 @@ void term_putn_bin(uint32_t number)
       number<<=1;
     }
 }
-void put_hex_char(byte n)
-{
-  term_putchar(n<10?dtoc(n):55+n);
-}
+static char hex_chars[]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '8', 'A', 'B', 'C', 'D', 'E', 'F'}; // we can spare 16 bytes!
 void term_putn_hex(uint32_t number)
 {
   term_puts("0x");
   for(int i=0;i<8;++i)
     {
-      put_hex_char(((number & 0xF0000000 ) >> 28));
+      term_putchar(hex_chars[((number & 0xF0000000 ) >> 28)]);
       number<<=4;
     }
 }
@@ -224,4 +221,22 @@ void term_put_keyboard_char(char c) // put a backspacable character
 int kprintf(const char* fmt, ...)
 {
   va_list va;
+  va_start(va, fmt);
+  for(int i=0;fmt[i];++i)
+    {
+      char c=fmt[i];
+      if(c=='%')
+	{
+	  ++i;
+	  switch(fmt[i])
+	    {
+	    case 'd':
+	      term_putn_dec(va_arg(va, int));
+	    }
+	}
+      else
+	term_putchar(c);
+    }
+  va_end(va);
+  return 0;
 }
