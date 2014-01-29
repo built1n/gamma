@@ -1,9 +1,10 @@
 SOURCES=boot.o kernel_main.o string.o term.o util.o gdt.o idt.o isr.o interrupt.o gdt-as.o panic.o clock.o keyboard.o heap.o page.o frame.o io.o power.o
 CFLAGS=-nostdlib -ffreestanding -fno-stack-protector -std=gnu99 -Wall
-ASFLAGS=-msyntax=att
 CC=gcc
+AS=gcc # We need to use macros
 #uncomment for MinGW GCC:
 #CC=mingw32-gcc
+ASFLAGS=-nostdlib -ffreestanding -fno-stack-protector -Wall -c
 all: $(SOURCES)
 	ld $(SOURCES) -T linker.ld -o bootImage.bin
 clean:
