@@ -232,6 +232,9 @@ int kprintf(const char* fmt, ...)
 	    {
 	    case 'd':
 	      term_putn_dec(va_arg(va, int));
+	      break;
+	    case 's':
+	      term_puts(va_arg(va, const char*));
 	    }
 	}
       else
