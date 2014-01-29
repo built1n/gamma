@@ -35,10 +35,7 @@ static void init(void)
   register_handler(0, &dividebyzero);
   set_unhandled_panic(true); // we've already registered all the handlers
 }
-#ifdef __cplusplus
-extern "C"
-#endif
-int kernel_main(void *mboot_ptr) // kernel entry point
+static void start_kernel(void)
 {
   early_init();
   term_puts("Booting...\n");
@@ -52,8 +49,13 @@ int kernel_main(void *mboot_ptr) // kernel entry point
   term_putchar('\n');
 #endif
   term_puts("System initialized.\n");
-  // do other stuff...
-  kprintf("Testing printf(): %d", 42);
+}
+#ifdef __cplusplus
+extern "C"
+#endif
+int kernel_main(void *mboot_ptr) // kernel entry point
+{
+  start_kernel();
  sys_run:
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
