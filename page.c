@@ -34,11 +34,11 @@ void page_fault(registers_t regs)
 {
   uint32_t faulting_addr;
   asm volatile("mov %%cr2, %0" : "=r" (faulting_addr)); // get the faulting address from register cr2
-  int present= !(regs.error_code & 1);
-  int rw=(regs.error_code & 2);
-  int us=(regs.error_code & 4);
-  int res=(regs.error_code & 8);
-  int id=(regs.error_code & 0x10);
+  //int present= !(regs.error_code & 1);
+  //int rw=(regs.error_code & 2);
+  //int us=(regs.error_code & 4);
+  //int res=(regs.error_code & 8);
+  //int id=(regs.error_code & 0x10);
   term_puts("page fault at address ");
   term_putn_hex(faulting_addr);
   term_puts("\n");
