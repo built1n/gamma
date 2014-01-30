@@ -7,7 +7,7 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-#include "gamma/gamma.h"
+#include <gamma.h>
 static void idle(){return;}
 void kpanic(const char* str, const char* file, int line)
 {

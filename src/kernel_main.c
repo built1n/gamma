@@ -10,8 +10,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "gamma/gamma.h"
-const char* build_time=__TIME__;
+#include <gamma.h>
+const char* build_time=__TIME__; // macros
 const char* build_date=__DATE__;
 void dividebyzero(registers_t regs)
 {

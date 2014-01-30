@@ -9,7 +9,7 @@
 */
 #include <stdint.h>
 #include <stddef.h>
-#include "gamma/gamma.h"
+#include <gamma.h>
 size_t strlen(const char* str)
 {
   size_t ret=0;

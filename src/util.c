@@ -7,7 +7,7 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-#include "gamma/gamma.h"
+#include <gamma.h>
 #include <stddef.h>
 #include <stdint.h>
 void outb(uint16_t port, uint8_t val)

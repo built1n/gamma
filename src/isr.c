@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "gamma/gamma.h"
+#include <gamma.h>
 
 static bool panic_on_unhandled;
 

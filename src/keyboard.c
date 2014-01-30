@@ -7,9 +7,10 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-// this is a PS/2 driver, not a USB driver!
+// this is a PS/2 driver, not a USB HID driver!
+// however, most USB HIDs emulate PS/2 (IRQ1, port 0x60)
 #define TAB_WIDTH 4
-#include "gamma/gamma.h"
+#include <gamma.h>
 #include <stdbool.h>
 static void(*kbdhandler)(char)=0;
 // PS/2 Data port: 0x60, command port: 0x64

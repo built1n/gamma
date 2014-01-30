@@ -7,7 +7,7 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-#include "gamma/gamma.h"
+#include <gamma.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>

@@ -1,4 +1,4 @@
-#include "gamma/gamma.h"
+#include <gamma.h>
 static char* read_buf;
 static int idx=0, maxchars;
 int readdone=0;

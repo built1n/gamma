@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "gamma/gamma.h"
+#include <gamma.h>
 
 struct idt_entry_type idt_entries[256]; //IDT with 256 entries
 

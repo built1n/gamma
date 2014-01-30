@@ -1,4 +1,4 @@
-#include "gamma/gamma.h"
+#include <gamma.h>
 #include <stdint.h>
 page_dir_t* current_directory;
 

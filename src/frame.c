@@ -8,7 +8,7 @@
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
 #include <stdint.h>
-#include "gamma/gamma.h"
+#include <gamma.h>
 uint32_t *frames;
 uint32_t nFrames;
 extern uint32_t next_addr;

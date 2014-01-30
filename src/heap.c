@@ -1,4 +1,4 @@
-#include "gamma/heap.h"
+#include <heap.h>
 #include <stdint.h>
 uint32_t next_addr=0x1000000; // be SURE to change this!!!
 uint32_t kmalloc_impl(uint32_t sz, int align, uint32_t *phys)

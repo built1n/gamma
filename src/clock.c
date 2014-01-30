@@ -8,7 +8,7 @@
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
 #define CLOCK_FREQ 1193180 // this is the same for all Intel CPUs
-#include "gamma/gamma.h"
+#include <gamma.h>
 #include <stdint.h>
 unsigned long long tick; // hundredths of a second
 void clock_tick(registers_t regs)
