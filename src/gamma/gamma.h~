@@ -1,0 +1,21 @@
+#ifndef GAMMA_H
+#define GAMMA_H
+/* instead of including every header in every source file , this file includes them all in one place */
+#include "gamma/gdt.h" // Global descriptor table
+#include "gamma/idt.h" // Interrupt table
+#include "gamma/isr.h" // Interrupt handlers
+#include "gamma/string.h" // strcmp, strlen, etc.
+#include "gamma/term.h" // terminal functions
+#include "gamma/util.h" // port i/o, call trace
+#include "gamma/panic.h" // the panic function
+#include "gamma/clock.h" // extremely complex!
+#include "gamma/keyboard.h" // PS/2 only
+#include "gamma/page.h" //-+ 
+#include "gamma/heap.h" // += Virtual memory
+#include "gamma/frame.h"//-+
+#include "gamma/io.h" //Basic input.output
+#include "gamma/power.h" 
+const char* build_time;
+const char* build_date;
+typedef unsigned char byte;
+#endif
