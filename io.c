@@ -1,7 +1,7 @@
 #include "gamma.h"
 static char* read_buf;
 static int idx=0, maxchars;
-volatile int readdone=0;
+int readdone=0;
 void on_keypress(char c)
 {
   if(c!='\n' && c!='\b' && c!=127)
@@ -53,8 +53,9 @@ int read(int n, char* buf)
       term_puts("Registering new keyboard handler.\n");
       register_keyboard_handler(&on_keypress);
       term_puts("Looping...\n");
-    loop: // this is neccessary, GCC will optimize a loop
-      if(readdone==0)
+      int *ptr=&readdone; // prevent any optimizations 
+    loop:
+      if(*ptr==0)
 	goto loop;
       else
 	goto done;
