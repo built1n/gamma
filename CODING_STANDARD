@@ -1,26 +1,23 @@
    
-                                   
-                                    ####       ##       ##    ##       ##    ##       ##
-                                   ## ##      ###      ###   ###      ###   ###      ###
-                                  ##  ##     ####     ####  ####     ####  ####     ####
-                                 ##         ## ##    ## ## ## ##    ## ## ## ##    ## ##
-                                ##   ###   ######   ##  ####  ##   ##  ####  ##   ######
-                               ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
-                              ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
+                                                                                          ####       ##       ##    ##       ##    ##       ##
+          ## ##      ###      ###   ###      ###   ###      ###
+         ##  ##     ####     ####  ####     ####  ####     ####
+        ##         ## ##    ## ## ## ##    ## ## ## ##    ## ##
+       ##   ###   ######   ##  ####  ##   ##  ####  ##   ######
+      ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
+     ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 
 
-                                *****************CODING=STANDARD********************
+          *****************CODING=STANDARD********************
 
 
   
-                        All Code and Programmin done g in Project Gamma will follow these guidelines.
-                        These guidelines are to insure that the code written for Gamma is developer 
-                        friendly and efficient.
-                        
-                                        
-                                      -------------------------------------                                         
-                                               General Programming
-                                      -------------------------------------
+All Code and Programming done in Project Gamma will follow these guidelines.
+These guidelines are to insure that the code written for Gamma is 
+developer-friendly and efficient.
+                    -------------------------------------     
+                            General Programming
+                    -------------------------------------
 
 1. Use the smallest integer possible for the job! 
 
@@ -30,15 +27,15 @@
 
 3. Avoid overusing macros.
 
-4. Keep lines appropriate length (>100 chars)
+4. Keep lines less than 80 characters!
 
 5. Try to document/comment as much code as you can.
 
-                                      -------------------------------------                                         
-                                                 C Programming
-                                      -------------------------------------
+                     -------------------------------------              
+                                 C Programming
+                     -------------------------------------
 
-                                      All C code will follow the GNU style.
+                     All C code will follow the GNU style.
                                       
 1. All identifiers should use the camelCase convention.
    
@@ -60,8 +57,8 @@
  
 4. Indents are 2 spaces in size.
 
-5. For all code blocks that are not function blocks, indent the braces AND indent
-   the code.
+5. For all code blocks that are not function blocks, indent the braces AND 
+   indent the code.
    
    void f()
    {
@@ -71,8 +68,8 @@
        }
    }
  
-6. Braces are optional for single-statement blocks. Both of these are acceptab	e:
-
+6. Braces are optional for single-statement blocks. Both of these are  
+   acceptable:
    if(adsf)
      statement;
      
@@ -95,11 +92,11 @@
    
 9. Always initialize pointers.
 
-                                            -------------------------------------                                         
-                                                     Assembly Programming
-                                            -------------------------------------
+                 -------------------------------------
+                         Assembly Programming
+                 -------------------------------------
 
-                                        All assembly code will use the AT&T assembler syntax
+          All assembly code will use the AT&T assembler syntax.
 
 1. Syntax
 
