@@ -1,0 +1,116 @@
+   
+                                   
+                                    ####       ##       ##    ##       ##    ##       ##
+                                   ## ##      ###      ###   ###      ###   ###      ###
+                                  ##  ##     ####     ####  ####     ####  ####     ####
+                                 ##         ## ##    ## ## ## ##    ## ## ## ##    ## ##
+                                ##   ###   ######   ##  ####  ##   ##  ####  ##   ######
+                               ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
+                              ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
+
+
+                                *****************CODING=STANDARD********************
+
+
+  
+                        All Code and Programmin done g in Project Gamma will follow these guidelines.
+                        These guidelines are to insure that the code written for Gamma is developer 
+                        friendly and efficient.
+                        
+                                        
+                                      -------------------------------------                                         
+                                               General Programming
+                                      -------------------------------------
+
+1. Use the smallest integer possible for the job! 
+
+   For example, if you only need to count to 100, use an 8-bit integer.
+
+2. Try to avoid using "magic numbers". If you do, document what they do.
+
+3. Avoid overusing macros.
+
+4. Keep lines appropriate length (>100 chars)
+
+5. Try to document/comment as much code as you can.
+
+                                      -------------------------------------                                         
+                                                 C Programming
+                                      -------------------------------------
+
+                                      All C code will follow the GNU style.
+                                      
+1. All identifiers should use the camelCase convention.
+   
+   uint32_t numberOfWords;
+   
+2. identifiers should be descriptive , dont over abbreviate identifiers.
+   
+   uint32_t numOfWrds; 
+   
+   NOT
+   
+   uint32_t nOfWds;
+
+3. Function opening braces are on the line after the function declaration and
+   are not indented.
+   
+   void f()
+   {
+ 
+4. Indents are 2 spaces in size.
+
+5. For all code blocks that are not function blocks, indent the braces AND indent
+   the code.
+   
+   void f()
+   {
+     if(asdf)
+       {
+         code;
+       }
+   }
+ 
+6. Braces are optional for single-statement blocks. Both of these are acceptab	e:
+
+   if(adsf)
+     statement;
+     
+     OR
+     
+   if(asdf)
+     {
+       statement;
+     }
+   
+7. You MUST document/comment ALL inline assembly!
+
+8. Function arguments are inline, like in C++.
+
+   void f(int arg1, int arg2)
+   
+   ===NOT===
+   
+   void f(arg1, arg2)int arg1, int arg2
+   
+9. Always initialize pointers.
+
+                                            -------------------------------------                                         
+                                                     Assembly Programming
+                                            -------------------------------------
+
+                                        All assembly code will use the AT&T assembler syntax
+
+1. Syntax
+
+    - The mov family of instructions are: "mov source, dest"
+    - Register names are prefixed with a %
+    - Constants are prefixed with a $
+    - When using an instruction with a constant, append a 'b', 'd' or 'l' 
+      depending on the desired size
+      
+2. Include the function prototypes for all assembly functions that return'	values or take arguments.
+
+3. Provide adequate documentation of all assembly code!
+
+4. Try to prefix global names with the part of the kernel it is used in.
