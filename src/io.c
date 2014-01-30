@@ -35,10 +35,6 @@ void on_keypress(char c)
 	}
     }
 }
-static void idle()
-{
-  return;
-}
 int read(int n, char* buf)
 {
   if(buf)
