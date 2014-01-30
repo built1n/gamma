@@ -1,4 +1,4 @@
-SOURCES=boot.o kernel_main.o string.o term.o util.o gdt.o idt.o isr.o interrupt.o gdt-as.o panic.o clock.o keyboard.o heap.o page.o frame.o io.o power.o
+SOURCES=boot.o kernel_main.o string.o term.o util.o gdt.o idt.o isr.o interrupt.o gdt-as.o panic.o clock.o keyboard.o heap.o page.o frame.o io.o power.o io-as.o
 CFLAGS=-nostdlib -ffreestanding -fno-stack-protector -std=gnu99 -Wall
 CC=gcc
 AS=gcc # We need to use macros
@@ -8,9 +8,19 @@ ASFLAGS=-nostdlib -ffreestanding -fno-stack-protector -Wall -c
 all: $(SOURCES)
 	ld $(SOURCES) -T linker.ld -o bootImage.bin
 clean:
+	rm -rf isodir
+	rm isoImage.iso -f
 	rm *.o -f
 	rm bootImage.bin -f
 	rm *~ -f
 	rm a.out -f
 install: all
 	cp bootImage.bin /boot/project_gamma
+iso: all
+	rm -rf isodir
+	mkdir isodir
+	mkdir isodir/boot
+	mkdir isodir/boot/grub
+	cp bootImage.bin isodir/boot
+	cp iso_grub.cfg isodir/boot/grub
+	grub-mkrescue -o isoImage.iso isodir
