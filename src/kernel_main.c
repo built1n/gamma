@@ -48,13 +48,7 @@ int kernel_main(void *mboot_ptr) // kernel entry point
   kprintf("Build date: %s, %s\n", build_time, build_date);
 #endif
   term_puts("System initialized.\n");
-  while(true)
-    {
-      term_puts("Enter a string: ");
-      char str[256];
-      read(256, str);
-      kprintf("You typed: %s\n", str);
-    }
+  
 sys_run:
   goto sys_run; // let the system run
   return 0xDEADBEEF; // we should never get here
