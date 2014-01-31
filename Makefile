@@ -20,6 +20,6 @@ iso: all
 	mkdir isodir
 	mkdir isodir/boot
 	mkdir isodir/boot/grub
-	cp bootImage.bin isodir/boot
-	cp iso_grub.cfg isodir/boot/grub
+	cp bootImage.bin isodir/boot/project_gamma
+	cp iso_grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o isoImage.iso isodir
