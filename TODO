@@ -1,0 +1,19 @@
+      ####       ##       ##    ##       ##    ##       ##
+     ## ##      ###      ###   ###      ###   ###      ###
+    ##  ##     ####     ####  ####     ####  ####     ####
+   ##         ## ##    ## ## ## ##    ## ## ## ##    ## ##
+  ##   ###   ######   ##  ####  ##   ##  ####  ##   ######
+ ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
+########## ##    ## ##    ##    ## ##    ##    ## ##    ##
+
+What can I do (not neccessarily in order)?
+This file answers that.
+
+Keyboard input (getting a string, not just a driver)
+Memory allocation (paging, segmentation)
+Write design doc.
+Preemptive multitasking
+USB keyboard support
+FS support
+C library
+Write documentation
