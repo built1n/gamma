@@ -39,6 +39,7 @@ void set_leds(int num, int caps, int scroll)
   outb(0x60, 0xED);
   outb(0x60, ledstatus);
 }
+static const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'}; // array of number keys + shift
 static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A-Z
 {
   char c=0;
@@ -220,7 +221,7 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
 	{
 	  // meant to be a debug aid
 	  term_clear();
-	  return 127;
+	  return 0;
 	}
       return 127;
     case 0x1A: // left bracket
@@ -296,6 +297,13 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       c='\t';
       break;
     }
+  if(scancode >=2 && scancode <=11) // number
+    {
+      if(modkeystatus.shiftdown)
+        c=number_shift_lookup[scancode-2];
+      else
+        c=scancode!=11? dtoc(scancode-1) : '0';
+    }
   if(c!=0)
     {
       // we can do other stuff here, too
@@ -309,7 +317,7 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
     }
   return 0;
 }
-const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'}; // array of number keys + shift
+
 static void ps2_process_key(byte scancode) // top level QWERTY PS/2 decoder
 {
   // up code for any down code is down code + 0x80
@@ -360,14 +368,6 @@ static void ps2_process_key(byte scancode) // top level QWERTY PS/2 decoder
   // not a modifier
   if(ps2_qwerty_autogen(scancode))
     return;
-  if(scancode >=2 && scancode <=11) // number
-    {
-      if(modkeystatus.shiftdown)
-	term_put_keyboard_char(number_shift_lookup[scancode-2]);
-      else
-	term_put_keyboard_char(scancode!=11? dtoc(scancode-1) : '0');
-      return;
-    }
 }
 void ps2_interrupt(registers_t regs)
 {
