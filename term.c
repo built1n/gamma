@@ -15,7 +15,7 @@ static const size_t VGA_WIDTH=80, VGA_HEIGHT=24;
 static size_t term_row, term_column;
 static uint8_t term_color;
 static uint16_t* term_buffer=(uint16_t*)0xB8000; // VGA screen buffer address
-int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over, one for each line
+static int last_prompt_char[24]; // index of 1st character from right that cannot be backspaced over, one for each line
 uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg << 4;
@@ -190,7 +190,7 @@ void term_putn_bin(uint32_t number)
       number<<=1;
     }
 }
-static char hex_chars[]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '8', 'A', 'B', 'C', 'D', 'E', 'F'}; // we can spare 16 bytes!
+static char hex_chars[]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '8', 'A', 'B', 'C', 'D', 'E', 'F'};
 void term_putn_hex(uint32_t number)
 {
   term_puts("0x");
@@ -218,7 +218,7 @@ void term_put_keyboard_char(char c) // put a backspacable character
 	term_putchar_internal('\b', 0);
     }
 }
-int kprintf(const char* fmt, ...)
+int printf(const char* fmt, ...)
 {
   va_list va;
   va_start(va, fmt);
@@ -227,13 +227,13 @@ int kprintf(const char* fmt, ...)
       char c=fmt[i];
       if(c=='%')
 	{
-	  ++i;
+	  ++i; // skip the % sign
 	  switch(fmt[i])
 	    {
-	    case 'd':
+	    case 'd': // signed integer
 	      term_putn_dec(va_arg(va, int));
 	      break;
-	    case 's':
+	    case 's': // string
 	      term_puts(va_arg(va, const char*));
 	    }
 	}
