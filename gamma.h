@@ -15,6 +15,7 @@
 #include "frame.h"//-+
 #include "io.h"
 #include "power.h"
+#include "sound.h"
 const char* build_time;
 const char* build_date;
 typedef unsigned char byte;
