@@ -128,6 +128,11 @@ static void term_putchar_internal(char c, int no_backspace)
 	    }
 	}
     }
+  else if(c=='\a')
+    {
+      beep();
+      return;
+    }
   else if(c!=0) // not a newline or backspace, or null
     {
       term_putentry(c, term_color, term_column, term_row);
