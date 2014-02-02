@@ -7,7 +7,6 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-#define CLOCK_FREQ 1193180 // this is the same for all Intel CPUs
 #include "gamma.h"
 #include <stdint.h>
 unsigned long long tick; // hundredths of a second
@@ -28,4 +27,10 @@ void init_clock(uint32_t frequency)
 uint64_t time(void)
 {
   return tick; 
+}
+void sleep(uint32_t n)
+{
+  int stop=tick+n;
+  while(tick!=stop)
+    ;
 }
