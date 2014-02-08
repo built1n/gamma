@@ -45,10 +45,13 @@ int main()
 	}
       else if(instr=="LPR") // load register pointer
 	{
-	  string location;
+	  string source;
 	  string dest;
-	  cin >> location >> dest;
-	  cout << "ctx->regs." << dest << "=ctx->program[ctx->regs." << location << "];" << endl;
+	  cin >> source >> dest;
+	  cout << "ctx->regs." << dest << "=ctx->program[ctx->regs." << source << "+3];" << endl;
+	  cout << "ctx->regs." << dest << "|=(ctx->program[ctx->regs." << source << "+2] << 8);" << endl;
+	  cout << "ctx->regs." << dest << "|=(ctx->program[ctx->regs." << source << "+1] << 16);" << endl;
+	  cout << "ctx->regs." << dest << "|=(ctx->program[ctx->regs." << source << "]   << 24);" << endl;
 	}
       else if(instr=="LMX")
 	{
