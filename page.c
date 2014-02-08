@@ -57,7 +57,8 @@ void init_paging(void)
   current_directory=kernel_dir;
   int i=0;
   term_puts("Preparing to enter loop.\n");
-  while(i<next_addr)
+  extern uint32_t _____kmalloc_next_addr;
+  while(i<_____kmalloc_next_addr)
     {
       alloc_frame( get_page(i, 1, kernel_dir),0,0);
       i+=0x1000;

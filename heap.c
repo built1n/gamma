@@ -1,7 +1,8 @@
 #include "heap.h"
 #include <stdint.h>
-uint32_t next_addr=0x1000000; // be SURE to change this!!!
-uint32_t kmalloc_impl(uint32_t sz, int align, uint32_t *phys)
+uint32_t _____kmalloc_next_addr=0x1000000; // as the kernel grows, this will need to change!
+#define next_addr _____kmalloc_next_addr
+static uint32_t kmalloc_impl(uint32_t sz, int align, uint32_t *phys)
 {
   if(align==1 && (next_addr & 0xFFFFF000)!=0)
     {
@@ -32,3 +33,4 @@ uint32_t kmalloc(uint32_t sz)
 {
   return kmalloc_impl(sz, 1, 0);
 }
+#undef next_addr
