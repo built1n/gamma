@@ -99,24 +99,32 @@ static void exec_instr_15(lingo_ctx* ctx)
 }
 static void exec_instr_16(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_17(lingo_ctx* ctx)
 {
+  
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_18(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_19(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_1A(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_1B(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_1C(lingo_ctx* ctx)
 {
+  ctx->regs.rc=ctx->program[ctx->regs.ra];
 }
 static void exec_instr_1D(lingo_ctx* ctx)
 {

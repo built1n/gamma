@@ -16,7 +16,7 @@ RSP - the pointer to the next location to push to on the stack
 PC - the program counter, as previously mentioned
 RF - the 8-bit flags register
 The format of the flags register is as follows:
-Bit 7    6        5        4     3 2 1 0(LSB)
+Bit 7    6        5        4     3 2 1 0 (LSB)
     Zero Negative Overflow Carry 
 The instruction set is as follows:
 0x00: NOP
