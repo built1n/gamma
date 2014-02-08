@@ -1,7 +1,7 @@
 #include "gamma.h"
 static char* read_buf;
 static int idx=0, maxchars;
-int readdone=0;
+static int readdone=0;
 void on_keypress(char c)
 {
   if(c!='\n' && c!='\b' && c!=127)
@@ -35,12 +35,9 @@ void on_keypress(char c)
 	}
     }
 }
-static void idle()
-{
-  return;
-}
 int read(int n, char* buf)
 {
+
   if(buf)
     {
       memset(buf, 0, n);
@@ -48,6 +45,7 @@ int read(int n, char* buf)
       void* old_handler=get_keyboard_handler();
       idx=0;
       readdone=0;
+
       read_buf=buf;
       maxchars=n;
       term_puts("Registering new keyboard handler.\n");
