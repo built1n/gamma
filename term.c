@@ -131,12 +131,23 @@ static void term_putchar_internal(char c, int no_backspace)
   else if(c=='\a')
     {
       beep();
-      return;
+    }
+  else if(c=='\t')
+    { 
+      if(term_column+TAB_WIDTH>=VGA_WIDTH)
+	{
+	  term_column=0;
+	  ++term_row;
+	}
+      for(int i=0;i<TAB_WIDTH;++i)
+	term_putentry(' ', term_color, term_column, term_row);
+      if(no_backspace)
+	last_prompt_char[term_row]+=TAB_WIDTH;
     }
   else if(c!=0) // not a newline or backspace, or null
     {
       term_putentry(c, term_color, term_column, term_row);
-      if(++term_column==VGA_WIDTH)
+      if(++term_column>=VGA_WIDTH)
 	{
 	  term_column=0;
 	  ++term_row;
@@ -205,14 +216,6 @@ void term_putn_hex(uint32_t number)
       number<<=4;
     }
 }
-void term_debug(const char* str)
-{
-  term_putchar('[');
-  term_putn_dec(time());
-  term_puts("] ");
-  term_puts(str);
-  term_putchar('\n');
-}
 void term_put_keyboard_char(char c) // put a backspacable character
 {
   if(c!='\b') // c is not backspace
@@ -227,7 +230,7 @@ int printf(const char* fmt, ...)
 {
   va_list va;
   va_start(va, fmt);
-  for(int i=0;fmt[i];++i)
+  for(unsigned int i=0;fmt[i];++i)
     {
       char c=fmt[i];
       if(c=='%')
@@ -240,7 +243,14 @@ int printf(const char* fmt, ...)
 	      break;
 	    case 's': // string
 	      term_puts(va_arg(va, const char*));
-	    }
+	      break;
+	    case 'c':
+	      term_putchar(va_arg(va, int));
+	      break;
+	    case 'h':
+	      term_putn_hex(va_arg(va, uint32_t));
+	      break;
+ 	    }
 	}
       else
 	term_putchar(c);
