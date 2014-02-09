@@ -8,7 +8,6 @@
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
 // this is a PS/2 driver, not a USB driver!
-#define TAB_WIDTH 4
 #include "gamma.h"
 #include <stdbool.h>
 static void(*kbdhandler)(char)=0;
@@ -220,7 +219,7 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
 	{
 	  // meant to be a debug aid
-	  term_clear();
+	  printf("Caught CTRL-ALT-DEL!\n");
 	  return 0;
 	}
       return 127;
@@ -292,8 +291,6 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       break;
     case 0x0F:
       // tab
-      for(int i=0;i<TAB_WIDTH;++i)
-	term_put_keyboard_char(' ');
       c='\t';
       break;
     }
@@ -306,8 +303,6 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
     }
   if(c!=0)
     {
-      // we can do other stuff here, too
-      // for instance: append to a keyboard buffer
       term_put_keyboard_char(c);
       if(kbdhandler)
 	{

@@ -30,7 +30,7 @@ static void early_init(void) // do low-level init
 static void init(void)
 {
   init_ps2();
-  term_puts("PS/2 keyboard initialized.\n");
+  printf("Keyboard initialized.\n");
   // register interrupt handlers
   register_handler(0, &dividebyzero);
   set_unhandled_panic(true); // we've already registered all the handlers
