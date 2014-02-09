@@ -1,4 +1,5 @@
 #include "../gamma.h"
+#include <stdint.h>
 #define LINGO_STACK_SIZE 8192
 struct lingo_regs_t {
   uint32_t RA, RB, RC, RD, RSP, PC;
