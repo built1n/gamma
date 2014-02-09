@@ -37,18 +37,14 @@ static uint32_t test_frame(uint32_t frame_addr)
 }
 static uint32_t first_frame(void)
 {
-  term_puts("first_frame called.\n");
-  term_puts("nFrames is: ");
-  term_putn_dec(nFrames);
-  term_putchar('\n');
-  term_puts("will loop ");
-  term_putn_dec(INDEX_FROM_BIT(nFrames));
-  term_puts(" times.\n");
+  printf("first_frame called.\n");
+  printf("nFrames is: %d\n", nFrames);
+  printf("will loop %d times\n", INDEX_FROM_BIT(nFrames));
   for(uint32_t i=0;i<INDEX_FROM_BIT(nFrames);++i)
     {
       if(frames[i]!=0xFFFFFFFF) // there is a free bit here
 	{
-	  term_puts("Found a limb with a free bit!\n");
+	  printf("Found a limb with a free bit!\n");
 	  for(int j=0;j<32;++j)
 	    {
 	      uint32_t temp=(1<<j);

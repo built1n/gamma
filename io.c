@@ -11,9 +11,9 @@ void on_keypress(char c)
 	  read_buf[idx]=c;
 	  ++idx;
 	}
-      term_puts("Buffer: ");
-      term_puts(read_buf);
-      term_puts("\n");
+      printf("Buffer: ");
+      printf(read_buf);
+      printf("\n");
     }
   else
     {
@@ -21,9 +21,6 @@ void on_keypress(char c)
 	{
 	case '\n':
 	  readdone=1; // this does not work!
-	  term_puts("Value of readdone: ");
-	  term_putn_dec(readdone);
-	  term_putchar('\n');
 	  break;
 	case '\b': case 127:
 	  if(idx>0)
@@ -41,16 +38,16 @@ int read(int n, char* buf)
   if(buf)
     {
       memset(buf, 0, n);
-      term_puts("Entering read function.\n");
+      printf("Entering read function.\n");
       void* old_handler=get_keyboard_handler();
       idx=0;
       readdone=0;
 
       read_buf=buf;
       maxchars=n;
-      term_puts("Registering new keyboard handler.\n");
+      printf("Registering new keyboard handler.\n");
       register_keyboard_handler(&on_keypress);
-      term_puts("Looping...\n");
+      printf("Looping...\n");
       int *ptr=&readdone; // prevent any optimizations 
     loop:
       if(*ptr==0)
@@ -58,7 +55,7 @@ int read(int n, char* buf)
       else
 	goto done;
     done:
-      term_puts("Done!\n");
+      printf("Done!\n");
       register_keyboard_handler(old_handler);
       return idx;
     }
