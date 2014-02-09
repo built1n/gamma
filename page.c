@@ -39,24 +39,22 @@ void page_fault(registers_t regs)
   //int us=(regs.error_code & 4);
   //int res=(regs.error_code & 8);
   //int id=(regs.error_code & 0x10);
-  term_puts("page fault at address ");
-  term_putn_hex(faulting_addr);
-  term_puts("\n");
+  printf("page fault at address %h\n", faulting_addr);
   panic("page fault");
 }
 void init_paging(void)
 {
-  term_puts("Initializing paging...\n");
+  printf("Initializing paging...\n");
   uint32_t mem_end_page=0x1000000; // 16MB for now
   nFrames=mem_end_page/0x1000;
-  term_puts("Allocing frames[]\n");
+  printf("Allocing frames[]\n");
   frames=(uint32_t*)kmalloc(INDEX_FROM_BIT(nFrames));
   memset(frames, 0, INDEX_FROM_BIT(nFrames));
   page_dir_t* kernel_dir=(page_dir_t*)kmalloc_a(sizeof(page_dir_t));
   memset(kernel_dir, 0, sizeof(page_dir_t));
   current_directory=kernel_dir;
   int i=0;
-  term_puts("Preparing to enter loop.\n");
+  printf("Preparing to enter loop.\n");
   extern uint32_t _____kmalloc_next_addr;
   while(i<_____kmalloc_next_addr)
     {
