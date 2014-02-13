@@ -19,7 +19,8 @@ void init_clock(uint32_t frequency)
   tick=0;
   uint32_t divisor=CLOCK_FREQ/frequency;
   byte low=(byte)(divisor & 0xFF), high=(byte)( (divisor >> 8) & 0xFF);
-  register_handler(32, &clock_tick); // IRQ0
+  // we want to register the clock handler first so that we don't risk an unhandled interrupt
+  register_handler(32, &clock_tick); // IRQ0  
   outb(0x43, 0x36);
   outb(0x40, low);
   outb(0x40, high);
