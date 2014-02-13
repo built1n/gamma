@@ -38,3 +38,4 @@ void term_clear(void);
 void term_reset(void); // clear, reset cursor, color
 void term_put_keyboard_char(char); // put a backspaceable char
 int printf(const char* fmt, ...);
+void term_movecursor(int, int);

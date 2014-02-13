@@ -33,6 +33,10 @@ static void move_cursor(uint16_t cursor_idx) // do the actual moving of the curs
   outb(0x3D4, 15);
   outb(0x3D5, cursor_idx); // low byte
 }
+void term_movecursor(int x, int y)
+{
+  move_cursor(VGA_WIDTH*y+x);
+}
 static void update_bios_cursor(void) // calculate the index of the cursor, then move it 
 {
   uint16_t cursor_x=term_column, cursor_y=term_row;
