@@ -23,7 +23,7 @@ struct {
   int capslock : 1; // caps lock on?
   int scrlock  : 1; // scroll lock?
 } modkeystatus; // keep track of modifier keys (ctrl, shift, etc)
-byte ledstatus=0; // keep track of LEDs
+static byte ledstatus=0; // keep track of LEDs
 void register_keyboard_handler(void(*fnPtr)(char))
 {
   kbdhandler=fnPtr;
@@ -37,6 +37,21 @@ void set_leds(int num, int caps, int scroll)
   ledstatus=scroll | (num << 1) | (caps << 2);
   outb(0x60, 0xED);
   outb(0x60, ledstatus);
+  modkeystatus.numlock=num;
+  modkeystatus.capslock=caps;
+  modkeystatus.scrlock=scroll;
+}
+inline static int get_num_lock(void)
+{
+  return (ledstatus & 0x2);
+}
+inline static int get_caps_lock(void)
+{
+  return (ledstatus & 0x4);
+}
+inline static int get_scroll_lock(void)
+{
+  return (ledstatus & 1);
 }
 static const char number_shift_lookup[10] = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')'}; // array of number keys + shift
 static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A-Z
@@ -218,9 +233,7 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
     case 0x53: // delete down
       if(modkeystatus.metadown && modkeystatus.ctrldown) // is it CTRL-ALT-DEL?
 	{
-	  // meant to be a debug aid
-	  printf("Caught CTRL-ALT-DEL!\n");
-	  return 0;
+	  ctrlaltdel();
 	}
       return 127;
     case 0x1A: // left bracket
@@ -292,6 +305,15 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
     case 0x0F:
       // tab
       c='\t';
+      break;
+    case 0xC5: // num lock up
+      set_leds(!get_num_lock(), get_caps_lock(), get_scroll_lock());
+      break;
+    case 0xBA: // caps lock up
+      set_leds(get_num_lock(), !get_caps_lock(), get_scroll_lock());
+      break;
+    case 0xC6:
+      set_leds(get_num_lock(), get_caps_lock(), !get_scroll_lock());
       break;
     }
   if(scancode >=2 && scancode <=11) // number
@@ -375,6 +397,5 @@ void init_ps2()
   register_handler(33, &ps2_interrupt);
   outb(0x60, 0xF0); 
   outb(0x60, 1); // set to scan code set 1
-  set_leds(1, 1, 1); // flash the leds
-  set_leds(0, 0, 0);
+  set_leds(0, 0, 0); // get the LEDs in a known state
 }
