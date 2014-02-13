@@ -17,10 +17,10 @@ stack_bottom:			# Stack grows up in addresses, so bottom is
 	.skip 32768		# 32KB stack
 stack_top:
 	
-.section .text 			# The executable part
-_start:                         # This is where execution begins
+.section .text 			# The executable section
 	.global _start		# Declare _start as a global function
 	.type _start, @function
+_start:                         # This is where execution begins
 	cli			# Stop interrupts, this is a critical section
 	movl $stack_bottom, %esp	# Initialize the stack
 	push %ebp		# Add register ebp to the arguments
