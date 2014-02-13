@@ -12,7 +12,6 @@
 ENTRY(_start) /* kernel enters at _start */
 SECTIONS
 {
-	. = 1M; /* skip 1M */
 	.text BLOCK(4K) : ALIGN(4K)
 	{
 		*(.multiboot) /* Multiboot header */
