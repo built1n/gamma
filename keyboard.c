@@ -7,7 +7,7 @@
    ##     ##  ##   ##  ##   ###   ##  ##   ###   ##  ##   ##
   ########## ##    ## ##    ##    ## ##    ##    ## ##    ##
 */
-// this is a PS/2 driver, not a USB driver!
+// this is a keyboard driver for both PS/2 and USB keyboards
 #include "gamma.h"
 #include <stdbool.h>
 static void(*kbdhandler)(char)=0;
