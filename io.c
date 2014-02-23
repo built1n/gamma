@@ -1,7 +1,7 @@
 #include "gamma.h"
 static char* read_buf;
 static int idx=0, maxchars;
-static int readdone=0;
+static int* readdone;
 void on_keypress(char c)
 {
   if(c!='\n' && c!='\b' && c!=127)
@@ -34,7 +34,8 @@ void on_keypress(char c)
 }
 int read(int n, char* buf)
 {
-
+  readdone=kmalloc(4);
+  *readdone=0;
   if(buf)
     {
       memset(buf, 0, n);
@@ -48,7 +49,7 @@ int read(int n, char* buf)
       printf("Registering new keyboard handler.\n");
       register_keyboard_handler(&on_keypress);
       printf("Looping...\n");
-      int *ptr=&readdone; // prevent any optimizations 
+      int *ptr=readdone; // prevent any optimizations 
     loop:
       if(*ptr==0)
 	goto loop;
