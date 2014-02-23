@@ -237,7 +237,7 @@ void term_putn_bin(uint32_t number)
     }
 }
 static char hex_chars_ucase[]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '8', 'A', 'B', 'C', 'D', 'E', 'F'};
-void term_putn_hex(uint32_t number)
+void term_putn_hex_ucase(uint32_t number)
 {
   for(int i=0;i<8;++i)
     {
@@ -290,7 +290,7 @@ int printf(const char* fmt, ...)
 	      term_putchar(va_arg(va, int));
 	      break;
 	    case 'X':
-	      term_putn_hex(va_arg(va, uint32_t));
+	      term_putn_hex_ucase(va_arg(va, uint32_t));
 	      break;
 	    case 'x':
 	      term_putn_hex_lcase(va_arg(va, uint32_t));
