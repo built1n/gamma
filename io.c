@@ -20,7 +20,7 @@ void on_keypress(char c)
       switch(c)
 	{
 	case '\n':
-	  readdone=1; // this does not work!
+	  *readdone=1; // this does not work!
 	  break;
 	case '\b': case 127:
 	  if(idx>0)
