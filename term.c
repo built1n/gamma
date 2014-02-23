@@ -201,6 +201,32 @@ void term_putn_dec(int32_t number)
 	}
     }
 }
+void term_putn_udec(uint32_t number)
+{
+  if(number==0) // exit early
+    {
+      term_putchar('0');
+      return;
+    }
+  char buf[10];
+  for(int i=0;i<10;++i)
+    {
+      buf[9-i]=dtoc(number%10);
+      number/=10;
+    }
+  uint8_t encountered_nonzero=0;
+  for(int i=0;i<10;++i)
+    {
+      if(buf[i]!='0')
+	{
+	  encountered_nonzero=1;
+	}
+      if(encountered_nonzero)
+	{
+	  term_putchar(buf[i]);
+	}
+    }
+}
 void term_putn_bin(uint32_t number)
 {
   for(int i=0;i<32;++i)
@@ -251,7 +277,11 @@ int printf(const char* fmt, ...)
 	  switch(fmt[i])
 	    {
 	    case 'd': // signed integer
+	    case 'i':
 	      term_putn_dec(va_arg(va, int));
+	      break;
+	    case 'u':
+	      term_putn_udec(va_arg(va, uint32_t));
 	      break;
 	    case 's': // string
 	      term_puts(va_arg(va, const char*));
@@ -265,7 +295,14 @@ int printf(const char* fmt, ...)
 	    case 'x':
 	      term_putn_hex_lcase(va_arg(va, uint32_t));
 	      break;
- 	    }
+	    case 'p': // pointer
+	      term_puts("0x");
+	      term_putn_hex_ucase(va_arg(va, uint32_t));
+	      break;
+	    case '%':
+	      term_putchar('%');
+	      break;
+	    }
 	}
       else
 	term_putchar(c);
