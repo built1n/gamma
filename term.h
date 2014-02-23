@@ -37,5 +37,5 @@ uint8_t term_getcolor(void);
 void term_clear(void);
 void term_reset(void); // clear, reset cursor, color
 void term_put_keyboard_char(char); // put a backspaceable char
-int printf(const char* fmt, ...);
+int printf(const char* fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void term_movecursor(int, int);
