@@ -64,7 +64,6 @@ extern "C"
 int kernel_main(void *mboot_ptr) // kernel entry point
 {
   early_init();
-  printf("Debug: current tick: %d\n");
   printf("Booting...\n");
   init();
   asm volatile("sti"); // enable interrupts
