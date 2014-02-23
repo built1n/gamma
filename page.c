@@ -39,7 +39,7 @@ void page_fault(registers_t regs)
   //int us=(regs.error_code & 4);
   //int res=(regs.error_code & 8);
   //int id=(regs.error_code & 0x10);
-  printf("page fault at address %h\n", faulting_addr);
+  printf("page fault at address 0x%X\n", faulting_addr);
   panic("page fault");
 }
 void init_paging(void)
