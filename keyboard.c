@@ -307,13 +307,13 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
       c='\t';
       break;
     case 0xC5: // num lock up
-      set_leds(!get_num_lock(), get_caps_lock(), get_scroll_lock());
+      set_leds(!(get_num_lock()&1), get_caps_lock(), get_scroll_lock());
       break;
     case 0xBA: // caps lock up
-      set_leds(get_num_lock(), !get_caps_lock(), get_scroll_lock());
+      set_leds(get_num_lock(), !(get_caps_lock()&1), get_scroll_lock());
       break;
     case 0xC6:
-      set_leds(get_num_lock(), get_caps_lock(), !get_scroll_lock());
+      set_leds(get_num_lock(), get_caps_lock(), !(get_scroll_lock()&1));
       break;
     }
   if(scancode >=2 && scancode <=11) // number
