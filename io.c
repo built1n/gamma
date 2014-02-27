@@ -3,7 +3,7 @@
 static char* read_buf;
 static int idx=0, maxchars;
 static uint32_t readdone=0;
-extern void loop_while_ptr_zero(uint32_t* ptr);
+extern uint32_t loop_while_ptr_zero(uint32_t* ptr);
 void on_keypress(char c)
 {
   if(c!='\n' && c!='\b' && c!=127)
