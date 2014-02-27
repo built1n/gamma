@@ -31,3 +31,21 @@ byte read_cmos(byte addr, byte nmi_disable)
   outb(0x70, ((nmi_disable | 0x1)<<7)|addr);
   return inb(0x71);
 }
+void nmi_enable(void)
+{
+  outb(0x70, (inb(0x70)&0x7F));
+}
+void nmi_disable(void)
+{
+  outb(0x70, inb(0x70)|0x80);
+}
+void disable_interrupts(void)
+{
+  asm volatile ("cli");
+  nmi_disable();
+}
+void enable_interrupts(void)
+{
+  asm volatile("sti");
+  nmi_enable();
+}
