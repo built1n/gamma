@@ -16,6 +16,7 @@
 #include "io.h"
 #include "power.h"
 #include "sound.h"
+#include "date.h"
 const char* build_time;
 const char* build_date;
 #endif
