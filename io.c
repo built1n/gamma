@@ -1,7 +1,9 @@
 #include "gamma.h"
+#include <stdint.h>
 static char* read_buf;
 static int idx=0, maxchars;
-static int* readdone;
+static uint32_t readdone=0;
+extern void loop_while_ptr_zero(uint32_t* ptr);
 void on_keypress(char c)
 {
   if(c!='\n' && c!='\b' && c!=127)
@@ -11,16 +13,13 @@ void on_keypress(char c)
 	  read_buf[idx]=c;
 	  ++idx;
 	}
-      printf("Buffer: ");
-      printf(read_buf);
-      printf("\n");
     }
   else
     {
       switch(c)
 	{
 	case '\n':
-	  *readdone=1; // this does not work!
+	  readdone=1; // this does not work!
 	  break;
 	case '\b': case 127:
 	  if(idx>0)
@@ -34,31 +33,13 @@ void on_keypress(char c)
 }
 int read(int n, char* buf)
 {
-  readdone=kmalloc(4);
-  *readdone=0;
-  if(buf)
-    {
-      memset(buf, 0, n);
-      printf("Entering read function.\n");
-      void* old_handler=get_keyboard_handler();
-      idx=0;
-      readdone=0;
-
-      read_buf=buf;
-      maxchars=n;
-      printf("Registering new keyboard handler.\n");
-      register_keyboard_handler(&on_keypress);
-      printf("Looping...\n");
-      int *ptr=readdone; // prevent any optimizations 
-    loop:
-      if(*ptr==0)
-	goto loop;
-      else
-	goto done;
-    done:
-      printf("Done!\n");
-      register_keyboard_handler(old_handler);
-      return idx;
-    }
-  return -1;
+  printf("Read function entered.\n");
+  read_buf=buf;
+  idx=0;
+  maxchars=n;
+  register_keyboard_handler(&on_keypress);
+  readdone=0;
+  printf("Waiting for enter...\n");
+  loop_while_ptr_zero(&readdone);
+  return idx;
 }
