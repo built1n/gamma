@@ -19,7 +19,12 @@ void dividebyzero(registers_t regs)
 }
 void detect_floppy(void)
 {
-  const char* lookup_table[16]={"No drive", "360 KB 5.25\" Drive", "1.2 MB 5.25\" Drive", "720 KB 3.5\" Drive", "1.44 MB 3.5\" Drive", "2.88 MB 3.5\" Drive"};
+  const char* lookup_table[16]={"No drive", 
+				"360 KB 5.25\" Drive", 
+				"1.2 MB 5.25\" Drive", 
+				"720 KB 3.5\" Drive", 
+				"1.44 MB 3.5\" Drive", 
+				"2.88 MB 3.5\" Drive",0,0,0,0,0,0,0,0,0,0};
   printf("Detecting floppy drives...\n");
   byte floppy_info=read_cmos(0x10, 0);
   printf("%s on master.\n", lookup_table[(floppy_info & 0xF0) >> 4]);
