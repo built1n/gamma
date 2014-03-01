@@ -47,17 +47,4 @@ void load_real_time_clock(rtc_t* ret)
 	current->year=old.year;
       }
   } while(!compare_rtc(old, test));
-  /*register_handler(IRQ8, &private_get_rtc);
-    current=ret;
-    current->semaphore=0;
-    // enable IRQ 8 CMOS interrupts
-    disable_interrupts();
-    byte old=read_cmos(0x8B, 1);
-    outb(0x70, 0x8B);
-    outb(0x71, old | 0x40); // OR 0x40
-    enable_interrupts();
-    // wait for IRQ8
-    while(current->semaphore==0)
-    ;
-    return;*/
 }
