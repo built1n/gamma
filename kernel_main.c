@@ -35,11 +35,13 @@ static inline void early_init(void) // do low-level init
   init_terminal();
   printf("Terminal initialized.\n");
   init_desc_tables(); // GDT, IDT
+  printf("Descriptor tables initialized.\n");
   register_handler(0xD, &null_handler); // for some reason, int 0xD gets sent constantly
-  register_handler(32, &clock_tick); // sometimes the clock_init function fails to do this for some reason
-  init_ps2();
+  register_handler(32, &clock_tick);
+  printf("Interrupt handlers registered.\n");
+  init_ps2(); // the name is misleading: it supports USB, too!
   printf("Keyboard initialized.\n");
-  init_clock(100); // 100 times per second, seems to freeze sometimes
+  init_clock(100); // 100 times per second, seems to crash sometimes
   printf("Early init complete.\n");
   // init_paging(); // BUGGY!
 }
