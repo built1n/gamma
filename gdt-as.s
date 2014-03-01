@@ -1,6 +1,8 @@
 	.global gdt_flush  # function prototype: void gdt_flush(uint32_t addr)
 	.type gdt_flush, @function
 gdt_flush:
+	pushl %ebp
+	movl %esp, %ebp
 	cli # this is a critical section of code!
 	movl 4(%esp), %eax # load the address off the stack
 	lgdt (%eax) # load the GDT
@@ -11,13 +13,17 @@ gdt_flush:
 	mov %ax, %gs
 	mov %ss, %ax
 	sti # enable interrupts
+	leave
 	ret
 	
 	.global idt_flush # function prototype: void idt_flush(uint32_t addr)
 	.type idt_flush, @function
 idt_flush:
+	pushl %ebp
+	movl %ebp, %esp
 	cli # this is a critical section of code!
 	movl 4(%esp), %eax # load the address off the stack
 	lidt (%eax) # load the IDT
 	sti # resume interrupts
+	leave
 	ret
