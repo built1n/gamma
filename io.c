@@ -2,7 +2,7 @@
 #include <stdint.h>
 static char* read_buf;
 static int idx=0, maxchars;
-static uint32_t readdone=0;
+uint32_t readdone=0;
 extern uint32_t loop_while_ptr_zero(uint32_t* ptr);
 void on_keypress(char c)
 {
@@ -40,6 +40,7 @@ int read(int n, char* buf)
   register_keyboard_handler(&on_keypress);
   readdone=0;
   printf("Waiting for enter...\n");
+  asm("sti");
   loop_while_ptr_zero(&readdone);
   return idx;
 }
