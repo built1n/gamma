@@ -19,12 +19,12 @@ void dividebyzero(registers_t regs)
 }
 void detect_floppy(void)
 {
-  const char* lookup_table[16]={"No drive", 
-				"360 KB 5.25\" Drive", 
-				"1.2 MB 5.25\" Drive", 
-				"720 KB 3.5\" Drive", 
-				"1.44 MB 3.5\" Drive", 
-				"2.88 MB 3.5\" Drive",0,0,0,0,0,0,0,0,0,0};
+  const char* lookup_table[16]={"No floppy drive", 
+				"360 KB 5.25\" floppy drive", 
+				"1.2 MB 5.25\" floppy drive", 
+				"720 KB 3.5\" floppy drive", 
+				"1.44 MB 3.5\" floppy drive", 
+				"2.88 MB 3.5\" floppy drive",0,0,0,0,0,0,0,0,0,0};
   printf("Detecting floppy drives...\n");
   byte floppy_info=read_cmos(0x10, 0);
   printf("%s on master.\n", lookup_table[(floppy_info & 0xF0) >> 4]);
@@ -84,9 +84,9 @@ int kernel_main(void *mboot_ptr) // kernel entry point
   printf("Build date: %s, %s\n", build_time, build_date);
 #endif
   printf("System initialized at tick %d.\n", time());
-  printf("Type: ");
-  char str[256];
-  read(256, str);
+  //printf("Type: ");
+  char *str=kmalloc(256);
+  //  read(256, str);
   printf("You typed \"%s\"\n",str); 
  sys_run:
   goto sys_run; // let the system run
