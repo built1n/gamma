@@ -43,11 +43,11 @@ void set_leds(int num, int caps, int scroll)
 }
 inline static int get_num_lock(void)
 {
-  return (ledstatus & 0x2);
+  return ((ledstatus & 0x2) >> 1);
 }
 inline static int get_caps_lock(void)
 {
-  return (ledstatus & 0x4);
+  return ((ledstatus & 0x4) >> 2);
 }
 inline static int get_scroll_lock(void)
 {
