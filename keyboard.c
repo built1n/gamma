@@ -59,158 +59,158 @@ static char ps2_qwerty_autogen(byte scancode) // process the scancode if it is A
   char c=0;
   switch(scancode)
     {
-    case 0x1E:
-      if(modkeystatus.shiftdown)
+     case 0x1E:
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='A';
       else
 	c='a';
       break;
     case 0x30:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='B';
       else
 	c='b';
       break;
     case 0x2E:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='C';
       else
 	c='c';
       break;
     case 0x20:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='D';
       else
 	c='d';
       break;
     case 0x12:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='E';
       else
 	c='e';
       break;
     case 0x21:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='F';
       else
 	c='f';
       break;
     case 0x22:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='G';
       else
 	c='g';
       break;
     case 0x23:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='H';
       else
 	c='h';
       break;
     case 0x17:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='I';
       else
 	c='i';
       break;
     case 0x24:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='J';
       else
 	c='j';
       break;
     case 0x25:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='K';
       else
 	c='k';
       break;
     case 0x26:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='L';
       else
 	c='l';
       break;
     case 0x32:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='M';
       else
 	c='m';
       break;
     case 0x31:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='N';
       else
 	c='n';
       break;
     case 0x18:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='O';
       else
 	c='o';
       break;
     case 0x19:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='P';
       else
 	c='p';
       break;
     case 0x10:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='Q';
       else
 	c='q';
       break;
     case 0x13:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='R';
       else
 	c='r';
       break;
     case 0x1F:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='S';
       else
 	c='s';
       break;
     case 0x14:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='T';
       else
 	c='t';
       break;
     case 0x16:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='U';
       else
 	c='u';
       break;
     case 0x2F:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='V';
       else
 	c='v';
       break;
     case 0x11:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='W';
       else
 	c='w';
       break;
     case 0x2D:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='X';
       else
 	c='x';
       break;
     case 0x15:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='Y';
       else
 	c='y';
       break;
     case 0x2C:
-      if(modkeystatus.shiftdown)
+      if(modkeystatus.shiftdown || modkeystatus.capslock)
 	c='Z';
       else
 	c='z';
