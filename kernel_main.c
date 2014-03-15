@@ -41,7 +41,7 @@ static inline void early_init(void) // do low-level init
   printf("Interrupt handlers registered.\n");
   init_ps2(); // the name is misleading: it supports USB, too!
   printf("Keyboard initialized.\n");
-  init_clock(100); // 100 times per second, seems to crash sometimes
+  //  init_clock(100); // 100 times per second, seems to crash sometimes
   printf("Early init complete.\n");
   // init_paging(); // BUGGY!
 }
@@ -50,12 +50,14 @@ static inline void init(void)
   detect_floppy();
   // register interrupt handlers
   register_handler(0, &dividebyzero);
+  /*
   printf("Getting real time...\n");
   rtc_t rtc;
   load_real_time_clock(&rtc);
   printf("RTC Loaded.\n");
   printf("Time: &%d:%d\n", rtc.hours, rtc.minutes);
   printf("Date: %d/%d/%d\n", rtc.month, rtc.day, rtc.year+2000);
+  */
   set_unhandled_panic(true); // we've already registered all the interrupt handlers we need
 }
 static int ctrlaltdel_count=0;
@@ -84,6 +86,7 @@ int kernel_main(void *mboot_ptr) // kernel entry point
   printf("Build date: %s, %s\n", build_time, build_date);
 #endif
   printf("System initialized at tick %d.\n", time());
+
   //printf("Type: ");
   char *str=kmalloc(256);
   //  read(256, str);
