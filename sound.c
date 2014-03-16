@@ -11,6 +11,7 @@
 #include "gamma.h"
 static void beep_internal(uint32_t freq)
 {
+  asm("sti");
   uint32_t div=CLOCK_FREQ/freq; // CLOCK_FREQ defined in clock.h, it is the same across all x86s
   outb(0x43, 0xB6);
   outb(0x42, (byte)div);
@@ -29,7 +30,7 @@ static void shut_up()
 
 void beep()
 {
-  beep_internal(CLOCK_FREQ);
+  beep_internal(1500);
   sleep(10); // 10/100 second
   shut_up();
 }
