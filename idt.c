@@ -90,7 +90,9 @@ static void init_idt()
   idt_set_gate(46, (uint32_t)irq14, 0x08, 0x8E);
   idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
   set_unhandled_panic(false);
+  asm("cli"); // for good measure, this will be done in idt_flush anyways
   idt_flush((uint32_t)&idt_pointer);
+  asm("sti");
 }
 void init_desc_tables() // do not print anything here, the terminal may not be initialized
 {
