@@ -3,11 +3,12 @@
 	.type loop_while_ptr_zero, @function
 	
 loop_while_ptr_zero:
-	pushl %ebp
-	movl %esp, %ebp
-	movl 4(%esp), %eax
+	push %ebp
+	mov %esp, %ebp
+	xor %edx, %edx
 loop:
-	movl (%eax), %edx
-	testl %edx, %edx
+	movl 4(%esp), %eax
+	movl (%eax), %eax
+	cmp %eax, %edx
 	je loop
 	ret
