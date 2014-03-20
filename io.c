@@ -1,7 +1,7 @@
 #include "gamma.h"
 #include <stdint.h>
-static char* read_buf;
-static int idx=0, maxchars;
+char* read_buf;
+int idx=0, maxchars;
 uint32_t readdone=0;
 extern uint32_t loop_while_ptr_zero(uint32_t* ptr);
 void on_keypress(char c)
