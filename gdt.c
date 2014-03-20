@@ -25,12 +25,14 @@ static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t acc
 }
 void init_gdt()
 {
+  asm("cli");
   gdt_pointer.limit=(sizeof(gdt_entry_type)*5)-1;
   gdt_pointer.base=(uint32_t)&gdt_entries;
   gdt_set_gate(0,0,0,0,0); // null seg.
-  gdt_set_gate(1,0,0xFFFFFFFF, 0x9A, 0xCF);
-  gdt_set_gate(2,0,0xFFFFFFFF, 0x92, 0xCF);
-  gdt_set_gate(3,0,0xFFFFFFFF, 0xFA, 0xCF);
+  gdt_set_gate(1,0,0xFFFFFFFF, 0x9A, 0xCF); // code
+  gdt_set_gate(2,0,0xFFFFFFFF, 0x92, 0xCF); // data
+  gdt_set_gate(3,0,0xFFFFFFFF, 0xFA, 0xCF); // TSS
   gdt_set_gate(4,0,0xFFFFFFFF, 0xF2, 0xCF);
   gdt_flush((uint32_t)&gdt_pointer);
+  asm("sti");
 }
