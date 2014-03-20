@@ -60,18 +60,10 @@ static inline void init(void)
   */
   set_unhandled_panic(true); // we've already registered all the interrupt handlers we need
 }
-static int ctrlaltdel_count=0;
 void ctrlaltdel(void)
 {
   printf("Current tick: %d\n", time());
-  ++ctrlaltdel_count;
-  if(ctrlaltdel_count==3)
-    {
-      printf("Testing read function: ");
-      char buf[256];
-      read(255, buf);
-      printf("You typed %s\n", buf);
-    }
+  return;
 }
 #ifdef __cplusplus
 extern "C"
@@ -87,9 +79,9 @@ int kernel_main(void *mboot_ptr) // kernel entry point
 #endif
   printf("System initialized at tick %d.\n", time());
 
-  //printf("Type: ");
+  printf("Type: ");
   char *str=kmalloc(256);
-  //  read(256, str);
+  read(256, str);
   printf("You typed \"%s\"\n",str); 
  sys_run:
   goto sys_run; // let the system run
