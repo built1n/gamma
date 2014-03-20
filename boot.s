@@ -21,12 +21,12 @@ stack_top:
 	.global _start		# Declare _start as a global function
 	.type _start, @function
 _start:                         # This is where execution begins
-	cli			# Stop interrupts, this is a critical section
+#	cli			# Stop interrupts, this is a critical section
 	movl $stack_bottom, %esp	# Initialize the stack
-	push %ebp		# Add register ebp to the arguments
+	push %ebp		# Add register ebp to the arguments of kernel_main
 	call kernel_main	# Start the kernel, SHOULD not return
 	cli			# Stop interrupts
 	hlt			# Halt the CPU
-.LKernel_hang:			# Idle forever
+.LKernel_hang:			# Idle
 	jmp .LKernel_hang
 	.size _start, . - _start
